@@ -1,10 +1,7 @@
+import { request as httpsRequest } from "https";
 import { XMLParser } from "fast-xml-parser";
 
-// const GET_PUBLICATIONS_URL = "https://medium.com/feed/codestar-blog";
-const GET_PUBLICATIONS_URL = "http://localhost:5003/medium.com/feed/codestar-blog";
-
-const GET_PAST_EVENTS_URL =
-  "https://api.meetup.com/Codestar-Night/events?&sign=true&photo-host=public&page=20&desc=true&status=past&fields=featured_photo";
+const GET_PUBLICATIONS_URL = "https://medium.com/feed/codestar-blog";
 
 export interface IMediumRSSResponse {
   rss: {
@@ -30,35 +27,58 @@ export interface IPublication {
   paragraphs: string;
 }
 
+// Workaround for 503 when calling medium.com feed with Fetch API
+const requestXmlString = (url: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const request = httpsRequest(url, (response) => {
+      let data = "";
+      response.on("data", (chunk) => {
+        data = data + chunk.toString();
+      });
+
+      response.on("end", () => {
+        resolve(data);
+      });
+    });
+
+    request.on("error", (error) => {
+      console.log("An error", error);
+      reject("Error on httpsRequest");
+    });
+
+    request.end();
+  });
+};
+
 export const getPublications = async (): Promise<IPublication[] | null> => {
   try {
-    const response = await fetch(GET_PUBLICATIONS_URL);
-    // const response = await fetch(GET_PAST_EVENTS_URL);
+    const text: string = (await requestXmlString(
+      GET_PUBLICATIONS_URL
+    )) as string;
+    // const response = await fetch(GET_PUBLICATIONS_URL);
     const parser = new XMLParser();
-    console.log(GET_PUBLICATIONS_URL, response.status, response.statusText);
-    // return [];
-    if (response.ok) {
-      const text = await response.text();
-      const jsonObj: IMediumRSSResponse = parser.parse(text);
-      const publications = jsonObj.rss.channel.item;
-      const simplePosts: IPublication[] = publications.map((publication) => ({
-        id: publication.guid,
-        title: publication.title,
-        author: publication["dc:creator"],
-        latestPublishedAt: publication.pubDate,
-        uniqueSlug: publication.link,
-        paragraphs: "",
-        // paragraphs: publication["content:encoded"],
-      }));
-      return simplePosts;
-    } else {
-      console.log(
-        "Publications response not ok",
-        response.status,
-        response.statusText
-      );
-      return null;
-    }
+    // if (response.ok) {
+    //   const text = await response.text();
+    const jsonObj: IMediumRSSResponse = parser.parse(text);
+    const publications = jsonObj.rss.channel.item;
+    const simplePosts: IPublication[] = publications.map((publication) => ({
+      id: publication.guid,
+      title: publication.title,
+      author: publication["dc:creator"],
+      latestPublishedAt: publication.pubDate,
+      uniqueSlug: publication.link,
+      paragraphs: "",
+      // paragraphs: publication["content:encoded"],
+    }));
+    return simplePosts;
+    // } else {
+    //   console.log(
+    //     "Publications response not ok",
+    //     response.status,
+    //     response.statusText
+    //   );
+    //   return null;
+    // }
   } catch (err) {
     console.error("error: " + err);
     return null;
