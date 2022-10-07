@@ -3,5 +3,24 @@
   width: 15vw;
   padding: 1rem;
   border-radius: 4px;
-  height: 10vw;
+  //   height: 10vw;
+
+  & > ul {
+    list-style-type: none;
+    padding: 0;
+
+    & > li {
+      overflow: hidden;
+    }
+
+    h3 {
+      //   text-overflow: ellipsis;
+      margin-bottom: 0;
+    }
+    p {
+      font-size: 80%;
+      margin-top: 2px;
+      color: #9f9f9f;
+    }
+  }
 }

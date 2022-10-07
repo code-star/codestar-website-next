@@ -1,31 +1,8 @@
 import { request as httpsRequest } from "https";
 import { XMLParser } from "fast-xml-parser";
+import { IPublication, IMediumRSSResponse } from "./publications.types";
 
 const GET_PUBLICATIONS_URL = "https://medium.com/feed/codestar-blog";
-
-export interface IMediumRSSResponse {
-  rss: {
-    channel: {
-      item: Array<{
-        guid: string;
-        title: string;
-        pubDate: string;
-        link: string;
-        "dc:creator": string;
-        "content:encoded": string;
-      }>;
-    };
-  };
-}
-
-export interface IPublication {
-  id: string;
-  title: string;
-  author: string;
-  latestPublishedAt: string;
-  uniqueSlug: string;
-  paragraphs: string;
-}
 
 // TODO: Remove this Workaround for 503 when calling medium.com feed with Fetch API
 const requestXmlString = (url: string): Promise<string> => {

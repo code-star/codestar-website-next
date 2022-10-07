@@ -5,22 +5,30 @@ import Link from "next/link";
 import MeetupList from "../components/MeetupList/MeetupList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
-import {
-  getPublications,
-  IPublication,
-} from "../lib/publications/getPublications";
+import { getPastMeetups } from "../lib/meetup/getPastMeetups";
+import { IMeetupEvent } from "../lib/meetup/meetup.types";
+import { getPublications } from "../lib/publications/getPublications";
+import { IPublication } from "../lib/publications/publications.types";
 import styles from "../styles/Home.module.scss";
 
 interface IHomeProps {
   publications?: IPublication[] | null;
+  pastMeetups?: IMeetupEvent[] | null;
 }
 
 export async function getStaticProps() {
   const publications = await getPublications();
-  return publications ? { props: { publications } } : { notFound: true };
+  const pastMeetups = await getPastMeetups();
+  return {
+    props: {
+      publications,
+      pastMeetups,
+    },
+  };
+  // return publications ? { props: { publications } } : { notFound: true };
 }
 
-const Home: NextPage<IHomeProps> = ({ publications }) => {
+const Home: NextPage<IHomeProps> = ({ publications, pastMeetups }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -57,7 +65,7 @@ const Home: NextPage<IHomeProps> = ({ publications }) => {
         </main>
 
         <aside>
-          <MeetupList />
+          {pastMeetups ? <MeetupList pastMeetups={pastMeetups} /> : ""}
         </aside>
       </div>
 
