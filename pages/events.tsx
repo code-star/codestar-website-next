@@ -2,6 +2,7 @@
 //   return { paths: [], fallback: true };
 // }
 
+import { NextPage } from "next";
 import { FC } from "react";
 import { MeetupResponse } from "../lib/meetup/meetup.types";
 
@@ -45,7 +46,7 @@ interface IEventProps {
   meetupResponse: MeetupResponse;
 }
 
-const Events: FC<IEventProps> = ({ meetupResponse }) => {
+const Events: NextPage<IEventProps> = ({ meetupResponse }) => {
   return (
     <div>
       <h1>Events</h1>
