@@ -1,0 +1,25 @@
+.publication-card {
+  // border: 1px solid #7f87d3;
+  border-radius: 4px;
+  width: 40vw;
+  // margin-top: 10px;
+  padding: 0 10px;
+
+  &:hover {
+    background-color: #213c5e;
+  }
+
+  & > section {
+    display: flex;
+    gap: 10px;
+    padding: 1rem;
+  }
+}
+
+.publication-card--author {
+  margin: 0;
+}
+
+.publication-card--date {
+  font-size: 80%;
+}
