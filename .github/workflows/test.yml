@@ -22,10 +22,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install and Build components 🔧
+        # .nojekyll: do not ignore _ dirs
         run: |
           npm ci
           npx next build && npx next export
-        # do not ignore _ dirs
           touch out/.nojekyll
         #     CI: false # true -> fails on warning
       - name: Deploy 🚀
