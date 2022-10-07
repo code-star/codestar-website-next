@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import MeetupList from "../components/MeetupList/MeetupList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
 import {
@@ -30,19 +31,20 @@ const Home: NextPage<IHomeProps> = ({ publications }) => {
 
       <TopBar />
 
-      <main className={styles.main}>
-        {publications ? (
-          <PublicationList publications={publications} />
-        ) : (
-          "Failed"
-        )}
+      <div className={styles.content}>
+        <main className={styles.main}>
+          {publications ? (
+            <PublicationList publications={publications} />
+          ) : (
+            "Failed"
+          )}
 
-        {/* <p className={styles.description}>
+          {/* <p className={styles.description}>
           Get started by editing{" "}
           <code className={styles.code}>pages/index.tsx</code>
         </p> */}
 
-        {/* <div className={styles.grid}>
+          {/* <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>
             <p>Find in-depth information about Next.js features and API.</p>
@@ -52,7 +54,12 @@ const Home: NextPage<IHomeProps> = ({ publications }) => {
             Codestar events
           </Link>
         </div> */}
-      </main>
+        </main>
+
+        <aside>
+          <MeetupList />
+        </aside>
+      </div>
 
       {/* <footer className={styles.footer}>
         <a

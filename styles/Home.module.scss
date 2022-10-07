@@ -1,3 +1,10 @@
+.content {
+  display: flex;
+  // align-items: top;
+  justify-content: center;
+  gap: 20px;
+}
+
 .main {
   display: flex;
   flex-direction: column;
