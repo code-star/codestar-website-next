@@ -1,0 +1,35 @@
+name: Deploy to Test (https://code-star.github.io/codestar-website-next/)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install and Build components 🔧
+        run: |
+          npm ci
+          npx next build && npx next export
+      #     CI: false # true -> fails on warning
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages # The branch the action should deploy to.
+          folder: out # The folder the action should deploy.
+          clean: true # Automatically remove deleted files from the deploy branch
