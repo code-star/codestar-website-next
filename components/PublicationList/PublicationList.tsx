@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { IPublication } from "../../lib/publications/getPublications";
+import { IPublication } from "../../lib/publications/publications.types";
 import PublicationCard from "../PublicationCard/PublicationCard";
 
 interface IPublicationListProps {
