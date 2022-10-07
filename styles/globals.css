@@ -23,7 +23,7 @@ a {
   }
   body {
     --cs-bg-color: #00254b;
-    color: white;
+    color: rgb(205, 205, 205);
     background: var(--cs-bg-color);
   }
 }

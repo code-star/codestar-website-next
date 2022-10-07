@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import PublicationList from "../components/PublicationList/PublicationList";
+import TopBar from "../components/TopBar/TopBar";
 import {
   getPublications,
   IPublication,
@@ -27,17 +28,7 @@ const Home: NextPage<IHomeProps> = ({ publications }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <nav className={styles.nav}>
-        <div>Codestar</div>
-        <ul>
-          <li>Home</li>
-          <li>
-            <Link href="/events">Events</Link>
-          </li>
-          <li>Codelancer</li>
-          <li>Contact</li>
-        </ul>
-      </nav>
+      <TopBar />
 
       <main className={styles.main}>
         {publications ? (

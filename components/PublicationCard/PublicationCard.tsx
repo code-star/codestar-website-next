@@ -12,7 +12,7 @@ const PublicationCard: FC<IPublicationCardProps> = ({ publication }) => {
   return (
     <a href={uniqueSlug} className={styles["publication-card"]}>
       <section>
-        <div>A</div>
+        <div className={styles["publication-card--avatar"]}>A</div>
         <div>
           <p className={styles["publication-card--author"]}>
             {author}

@@ -1,3 +1,5 @@
+$color-orange: #e47e06;
+
 .publication-card {
   // border: 1px solid #7f87d3;
   border-radius: 4px;
@@ -14,6 +16,16 @@
     gap: 10px;
     padding: 1rem;
   }
+}
+
+.publication-card--avatar {
+  background-color: $color-orange;
+  border-radius: 50%;
+  color: black;
+  height: 20px;
+  min-width: 20px;
+  position: relative;
+  text-align: center;
 }
 
 .publication-card--author {
