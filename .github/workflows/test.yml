@@ -25,7 +25,9 @@ jobs:
         run: |
           npm ci
           npx next build && npx next export
-      #     CI: false # true -> fails on warning
+        # do not ignore _ dirs
+          touch out/.nojekyll
+        #     CI: false # true -> fails on warning
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
