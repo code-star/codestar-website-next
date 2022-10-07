@@ -27,6 +27,18 @@ const Home: NextPage<IHomeProps> = ({ publications }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <nav className={styles.nav}>
+        <div>Codestar</div>
+        <ul>
+          <li>Home</li>
+          <li>
+            <Link href="/events">Events</Link>
+          </li>
+          <li>Codelancer</li>
+          <li>Contact</li>
+        </ul>
+      </nav>
+
       <main className={styles.main}>
         {publications ? (
           <PublicationList publications={publications} />

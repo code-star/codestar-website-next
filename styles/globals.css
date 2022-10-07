@@ -1,3 +1,5 @@
+
+
 html,
 body {
   padding: 0;
@@ -20,7 +22,8 @@ a {
     color-scheme: dark;
   }
   body {
+    --cs-bg-color: #00254b;
     color: white;
-    background: black;
+    background: var(--cs-bg-color);
   }
 }

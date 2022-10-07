@@ -27,7 +27,7 @@ export interface IPublication {
   paragraphs: string;
 }
 
-// Workaround for 503 when calling medium.com feed with Fetch API
+// TODO: Remove this Workaround for 503 when calling medium.com feed with Fetch API
 const requestXmlString = (url: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const request = httpsRequest(url, (response) => {
@@ -67,8 +67,7 @@ export const getPublications = async (): Promise<IPublication[] | null> => {
       author: publication["dc:creator"],
       latestPublishedAt: publication.pubDate,
       uniqueSlug: publication.link,
-      paragraphs: "",
-      // paragraphs: publication["content:encoded"],
+      paragraphs: publication["content:encoded"] || "",
     }));
     return simplePosts;
     // } else {
