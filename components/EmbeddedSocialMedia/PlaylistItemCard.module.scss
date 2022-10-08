@@ -1,0 +1,24 @@
+@import "../constants";
+
+.embedded-social-media {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.playlistitem-card {
+  background-color: $highlight-card-bg;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  width: 20vw;
+  gap: 10px;
+
+  & > h3 {
+    margin: 0 5px;
+  }
+
+  & > p {
+    margin: 0 5px 5px 5px;
+  }
+}

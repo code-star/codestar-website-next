@@ -1,9 +1,10 @@
+@import "../constants";
+
 .meetup-card {
-  background-color: #213c5e;
+  background-color: $highlight-card-bg;
   width: 15vw;
   padding: 1rem;
   border-radius: 4px;
-  //   height: 10vw;
 
   & > ul {
     list-style-type: none;

@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import EmbeddedSocialMedia from "../components/EmbeddedSocialMedia/EmbeddedSocialMedia";
 import MeetupCardList from "../components/MeetupCardList/MeetupCardList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
@@ -10,23 +11,28 @@ import { getUpcomingMeetups } from "../lib/meetup/getUpcomingMeetups";
 import { IMeetupEvent } from "../lib/meetup/meetup.types";
 import { getPublications } from "../lib/publications/getPublications";
 import { IPublication } from "../lib/publications/publications.types";
+import { getYoutubePlaylist } from "../lib/youtube-playlist/getYoutubePlaylist";
+import { IPlaylistItem } from "../lib/youtube-playlist/youtube-playlist.types";
 import styles from "../styles/Home.module.scss";
 
 interface IHomeProps {
   publications?: IPublication[] | null;
   upcomingMeetups?: IMeetupEvent[] | null;
   pastMeetups?: IMeetupEvent[] | null;
+  playlist?: IPlaylistItem[];
 }
 
 export async function getStaticProps() {
   const publications = await getPublications();
   const upcomingMeetups = await getUpcomingMeetups();
   const pastMeetups = await getPastMeetups();
+  const playlist = await getYoutubePlaylist();
   return {
     props: {
       publications,
       upcomingMeetups,
       pastMeetups,
+      playlist,
     },
   };
   // return publications ? { props: { publications } } : { notFound: true };
@@ -36,6 +42,7 @@ const Home: NextPage<IHomeProps> = ({
   publications,
   upcomingMeetups,
   pastMeetups,
+  playlist,
 }) => {
   return (
     <div className={styles.container}>
@@ -48,7 +55,9 @@ const Home: NextPage<IHomeProps> = ({
       <TopBar />
 
       <div className={styles.content}>
-        <aside>video & tweets</aside>
+        <aside>
+          <EmbeddedSocialMedia playlist={playlist ?? []} />
+        </aside>
         <main className={styles.main}>
           {publications ? (
             <PublicationList publications={publications} />

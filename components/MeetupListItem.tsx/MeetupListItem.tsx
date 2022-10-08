@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { formatDate } from "../../lib/formatDate";
 import { IMeetupEvent } from "../../lib/meetup/meetup.types";
 
 interface IMeetupListItemProps {
@@ -11,13 +12,7 @@ const MeetupListItem: FC<IMeetupListItemProps> = ({ meetup }) => {
     <li>
       <a href={link}>
         <h3>{name}</h3>
-        <p>
-          {new Date(time).toLocaleDateString("nl-NL", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          })}
-        </p>
+        <p>{formatDate(time)}</p>
       </a>
     </li>
   );

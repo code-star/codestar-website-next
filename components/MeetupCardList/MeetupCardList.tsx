@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { formatDate } from "../../lib/formatDate";
 import { IMeetupEvent } from "../../lib/meetup/meetup.types";
 import MeetupCard from "../MeetupCard/MeetupCard";
 import MeetupListItem from "../MeetupListItem.tsx/MeetupListItem";
@@ -20,13 +21,7 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
           <a key={p.name} href={p.link}>
             <MeetupCard>
               <h3>{p.name}</h3>
-              <p>
-                {new Date(p.time).toLocaleDateString("nl-NL", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                })}
-              </p>
+              <p>{formatDate(p.time)}</p>
             </MeetupCard>
           </a>
         );
