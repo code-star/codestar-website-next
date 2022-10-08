@@ -17,8 +17,8 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
     <div className={styles["meetup-list"]}>
       {upcomingMeetups.map((p) => {
         return (
-          <MeetupCard key={p.name}>
-            <a href={p.link}>
+          <a key={p.name} href={p.link}>
+            <MeetupCard>
               <h3>{p.name}</h3>
               <p>
                 {new Date(p.time).toLocaleDateString("nl-NL", {
@@ -27,8 +27,8 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
                   day: "2-digit",
                 })}
               </p>
-            </a>
-          </MeetupCard>
+            </MeetupCard>
+          </a>
         );
       })}
 
