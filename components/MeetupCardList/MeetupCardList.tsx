@@ -1,34 +1,42 @@
 import { FC } from "react";
 import { IMeetupEvent } from "../../lib/meetup/meetup.types";
 import MeetupCard from "../MeetupCard/MeetupCard";
-import styles from "./MeetupList.module.scss";
+import MeetupListItem from "../MeetupListItem.tsx/MeetupListItem";
+import styles from "./MeetupCardList.module.scss";
 
-interface IMeetupListProps {
+interface IMeetupCardListProps {
+  upcomingMeetups: IMeetupEvent[];
   pastMeetups: IMeetupEvent[];
 }
 
-const MeetupList: FC<IMeetupListProps> = ({ pastMeetups }) => {
+const MeetupCardList: FC<IMeetupCardListProps> = ({
+  upcomingMeetups,
+  pastMeetups,
+}) => {
   return (
     <div className={styles["meetup-list"]}>
-      <MeetupCard>upcoming meetup!</MeetupCard>
+      {upcomingMeetups.map((p) => {
+        return (
+          <MeetupCard key={p.name}>
+            <a href={p.link}>
+              <h3>{p.name}</h3>
+              <p>
+                {new Date(p.time).toLocaleDateString("nl-NL", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
+              </p>
+            </a>
+          </MeetupCard>
+        );
+      })}
+
+      <h2>PAST MEETUPS</h2>
       <MeetupCard>
-        <h2>past meetups</h2>
         <ul>
           {pastMeetups.map((p) => {
-            return (
-              <li key={p.name}>
-                <a href={p.link}>
-                  <h3>{p.name}</h3>
-                  <p>
-                    {new Date(p.time).toLocaleDateString("nl-NL", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
-                  </p>
-                </a>
-              </li>
-            );
+            return <MeetupListItem key={p.name} meetup={p} />;
           })}
         </ul>
       </MeetupCard>
@@ -58,4 +66,4 @@ const MeetupList: FC<IMeetupListProps> = ({ pastMeetups }) => {
   );
 };
 
-export default MeetupList;
+export default MeetupCardList;

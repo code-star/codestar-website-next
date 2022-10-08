@@ -2,10 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import MeetupList from "../components/MeetupList/MeetupList";
+import MeetupCardList from "../components/MeetupCardList/MeetupCardList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
 import { getPastMeetups } from "../lib/meetup/getPastMeetups";
+import { getUpcomingMeetups } from "../lib/meetup/getUpcomingMeetups";
 import { IMeetupEvent } from "../lib/meetup/meetup.types";
 import { getPublications } from "../lib/publications/getPublications";
 import { IPublication } from "../lib/publications/publications.types";
@@ -13,22 +14,29 @@ import styles from "../styles/Home.module.scss";
 
 interface IHomeProps {
   publications?: IPublication[] | null;
+  upcomingMeetups?: IMeetupEvent[] | null;
   pastMeetups?: IMeetupEvent[] | null;
 }
 
 export async function getStaticProps() {
   const publications = await getPublications();
+  const upcomingMeetups = await getUpcomingMeetups();
   const pastMeetups = await getPastMeetups();
   return {
     props: {
       publications,
+      upcomingMeetups,
       pastMeetups,
     },
   };
   // return publications ? { props: { publications } } : { notFound: true };
 }
 
-const Home: NextPage<IHomeProps> = ({ publications, pastMeetups }) => {
+const Home: NextPage<IHomeProps> = ({
+  publications,
+  upcomingMeetups,
+  pastMeetups,
+}) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -66,7 +74,14 @@ const Home: NextPage<IHomeProps> = ({ publications, pastMeetups }) => {
         </main>
 
         <aside>
-          {pastMeetups ? <MeetupList pastMeetups={pastMeetups} /> : ""}
+          {pastMeetups || upcomingMeetups ? (
+            <MeetupCardList
+              upcomingMeetups={upcomingMeetups || []}
+              pastMeetups={pastMeetups || []}
+            />
+          ) : (
+            ""
+          )}
         </aside>
       </div>
 
