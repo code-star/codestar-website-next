@@ -23,7 +23,21 @@ export const getYoutubePlaylist = async (): Promise<
       return items;
     } else {
       console.log("getYoutubePlaylist not ok");
-      return;
+      return [
+        {
+          id: "1",
+          publishedAt: "123",
+          title: "failure",
+          description: [],
+          thumbnails: {
+            default: {
+              url: "",
+              width: 100,
+              height: 100,
+            },
+          },
+        },
+      ];
     }
   } catch (err) {
     console.log("error: " + err);
