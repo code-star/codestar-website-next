@@ -12,4 +12,13 @@
     display: flex;
     gap: 10px;
   }
+
+  a {
+    border-radius: 4px;
+    padding: 10px;
+
+    &:hover {
+      background-color: #222;
+    }
+  }
 }

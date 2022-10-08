@@ -40,6 +40,7 @@ const Home: NextPage<IHomeProps> = ({ publications, pastMeetups }) => {
       <TopBar />
 
       <div className={styles.content}>
+        <aside>video & tweets</aside>
         <main className={styles.main}>
           {publications ? (
             <PublicationList publications={publications} />
