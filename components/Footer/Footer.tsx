@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styles from "./Footer.module.scss";
 import Image from "next/image";
+import twitterSvg from '../../public/twitter_logo.svg'
 
 const Footer: FC = () => {
   return (
@@ -20,7 +21,7 @@ const Footer: FC = () => {
       <p className="social-links">
         <a href="https://twitter.com/codestar_nl" aria-label="Twitter">
           <Image
-            src="/codestar-website-next/twitter_logo.svg"
+            src={twitterSvg}
             alt="Codestar Twitter"
             width={32}
             height={32}
