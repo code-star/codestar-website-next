@@ -31,9 +31,12 @@ jobs:
           echo ${#YOUTUBE_API_KEY}
           echo ${#YOUTUBE_PLAYLIST_ID}
           abc=${{ secrets.YOUTUBE_PLAYLIST_ID }}
+          NEXT_PUBLIC_FOO=${{ secrets.NEXT_PUBLIC_FOO }}
           echo ${#abc}
           echo YOUTUBE_API_KEY="$YOUTUBE_API_KEY" >> .env
           echo YOUTUBE_PLAYLIST_ID="$YOUTUBE_PLAYLIST_ID" >> .env
+          echo ${#NEXT_PUBLIC_FOO}
+          echo NEXT_PUBLIC_FOO="$NEXT_PUBLIC_FOO" >> .env
           npm ci
           npx next build && npx next export
           touch out/.nojekyll
