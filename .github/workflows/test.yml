@@ -23,13 +23,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install and Build components 🔧
         env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_PLAYLIST_ID: ${{ secrets.YOUTUBE_PLAYLIST_ID }}
         # .nojekyll: do not ignore _ dirs
         run: |
           touch .env
-          echo YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY1 }} >> .env
+          echo YOUTUBE_API_KEY="$YOUTUBE_API_KEY" >> .env
           echo YOUTUBE_PLAYLIST_ID="$YOUTUBE_PLAYLIST_ID" >> .env
-          cat .env
           npm ci
           npx next build && npx next export
           touch out/.nojekyll
