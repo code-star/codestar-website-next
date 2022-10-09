@@ -1,6 +1,7 @@
 export const formatDate = (time: string) =>
-  new Date(time).toLocaleDateString("nl-NL", {
-    year: "numeric",
-    month: "2-digit",
+  new Date(time).toLocaleDateString("en-GB", {
+    weekday: 'short',
     day: "2-digit",
+    month: "short",
+    year: "numeric",
   });

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { formatDate } from "../../lib/formatDate";
 import { IPublication } from "../../lib/publications/publications.types";
 // import { IPublication } from "../../lib/publications/getPublications";
 // import SanitizedHTML from 'react-sanitized-html';
@@ -14,11 +15,14 @@ const PublicationCard: FC<IPublicationCardProps> = ({ publication }) => {
   return (
     <a href={uniqueSlug} className={styles["publication-card"]}>
       <section>
-        <div className={styles["publication-card--avatar"]}>A</div>
+        {/* TODO map avatars */}
+        <div className={styles["publication-card--avatar"]}>
+          {author.slice(0, 1).toUpperCase()}
+        </div>
         <div>
           <p className={styles["publication-card--author"]}>{author}</p>
           <p className={styles["publication-card--date"]}>
-            {latestPublishedAt}
+            {formatDate(latestPublishedAt)}
           </p>
           <h2>{title}</h2>
           {/* <SanitizedHTML
