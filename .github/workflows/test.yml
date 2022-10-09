@@ -28,6 +28,10 @@ jobs:
         # .nojekyll: do not ignore _ dirs
         run: |
           touch .env
+          echo ${#YOUTUBE_API_KEY}
+          echo ${#YOUTUBE_PLAYLIST_ID}
+          abc=${{ secrets.YOUTUBE_PLAYLIST_ID }}
+          echo ${#abc}
           echo YOUTUBE_API_KEY="$YOUTUBE_API_KEY" >> .env
           echo YOUTUBE_PLAYLIST_ID="$YOUTUBE_PLAYLIST_ID" >> .env
           npm ci
