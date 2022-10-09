@@ -22,7 +22,9 @@ export const getYoutubePlaylist = async (): Promise<
       }));
       return items;
     } else {
+      // TODO highlight titles on hover for playlist items and meetups_
       console.log("getYoutubePlaylist not ok");
+      // TODO fix env loading on github pages_
       return [
         {
           id: "1",
@@ -31,6 +33,11 @@ export const getYoutubePlaylist = async (): Promise<
           description: [],
           thumbnails: {
             default: {
+              url: "",
+              width: 100,
+              height: 100,
+            },
+            medium: {
               url: "",
               width: 100,
               height: 100,
