@@ -7,11 +7,11 @@ import PlaylistItemCard from "../PlaylistItemCard/PlaylistItemCard";
 import styles from "./EmbeddedSocialMedia.module.scss";
 
 interface EmbeddedSocialMediaProps {
-  tweets?: ITweets;
+  tweets: ITweets | null;
   playlist: IPlaylistItem[];
 }
 
-const TweetCard = ({ tweets }: { tweets?: ITweets }) => {
+const TweetCard = ({ tweets }: { tweets?: ITweets | null}) => {
   if (!tweets) {
     return <></>;
   }

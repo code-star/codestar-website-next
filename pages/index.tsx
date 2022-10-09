@@ -21,7 +21,7 @@ interface IHomeStaticProps {
   publications?: IPublication[] | null;
   upcomingMeetups?: IMeetupEvent[] | null;
   pastMeetups?: IMeetupEvent[] | null;
-  tweets: ITweets | undefined;
+  tweets: ITweets | null;
   playlist: IPlaylistItem[] | undefined;
 }
 
@@ -102,18 +102,14 @@ const Home: NextPage<IHomeProps> = ({
         </aside>
       </div>
 
-      {/* <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer> */}
+      <footer className={styles.footer}>
+        <p>codestar@ordina.nl</p>
+        <p>+31 30 6637000</p>
+        <p>Ringwade 1, 3439 LM Nieuwegein</p>
+        {/* TODO <p>
+          [twitter] [github] [medium] [youtube] [linkedin] [youtube] [meetup]
+        </p> */}
+      </footer>
     </div>
   );
 };
