@@ -6,6 +6,7 @@ import EmbeddedSocialMedia from "../components/EmbeddedSocialMedia/EmbeddedSocia
 import MeetupCardList from "../components/MeetupCardList/MeetupCardList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
+import WelcomeCard from "../components/WelcomeCard/WelcomeCard";
 import { getPastMeetups } from "../lib/meetup/getPastMeetups";
 import { getUpcomingMeetups } from "../lib/meetup/getUpcomingMeetups";
 import { IMeetupEvent } from "../lib/meetup/meetup.types";
@@ -59,6 +60,7 @@ const Home: NextPage<IHomeProps> = ({
           <EmbeddedSocialMedia playlist={playlist ?? []} />
         </aside>
         <main className={styles.main}>
+          <WelcomeCard />
           {publications ? (
             <PublicationList publications={publications} />
           ) : (

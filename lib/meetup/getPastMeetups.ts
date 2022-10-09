@@ -9,7 +9,7 @@ export const getPastMeetups = async (): Promise<Array<IMeetupEvent> | null> => {
     const response = await fetch(GET_PAST_EVENTS_URL);
     if (response.ok) {
       const meetupResponse: MeetupResponse = await response.json();
-      return meetupResponse;
+      return meetupResponse.slice(0, 7);
     } else {
       console.log("not ok");
       return null;

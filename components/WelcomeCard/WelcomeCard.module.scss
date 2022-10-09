@@ -1,0 +1,8 @@
+.welcome-card {
+  width: 40vw;
+  padding: 0 10px;
+
+  & :global(a) {
+    text-decoration: underline;
+  }
+}

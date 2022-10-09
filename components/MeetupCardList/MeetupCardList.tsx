@@ -33,6 +33,11 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
           {pastMeetups.map((p) => {
             return <MeetupListItem key={p.name} meetup={p} />;
           })}
+          <li>
+            <a href="https://www.meetup.com/codestar-night/events/past/">
+              More past meetups...
+            </a>
+          </li>
         </ul>
       </MeetupCard>
       {/* <section className={styles["meetup-card"]}>upcoming meetup!</section>
