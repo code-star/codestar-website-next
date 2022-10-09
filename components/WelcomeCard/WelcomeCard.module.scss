@@ -5,4 +5,11 @@
   & :global(a) {
     text-decoration: underline;
   }
+
+
+  @media screen and (max-width: 900px) {
+    & {
+      width: 90vw;
+    }
+  }
 }

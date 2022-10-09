@@ -26,10 +26,11 @@ const TweetCard = ({ tweets }: { tweets?: ITweets }) => {
   */
   return (
     <section style={{ width: "15vw" }}>
-      <p>{tweets.author.username}</p>{" "}
+      {/* <p>{tweets.author.username}</p>{" "} */}
       {tweets.data.map((d) => (
         <div key={d.id}>
-          <p>[icon] {formatDate(d["created_at"])}</p>
+          {/* TODO icon <p>[icon] {formatDate(d["created_at"])}</p> */}
+          <p>{formatDate(d["created_at"])}</p>
           <p>{d.text}</p>
         </div>
       ))}{" "}

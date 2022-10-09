@@ -3,7 +3,7 @@
   display: flex;
   height: 56px;
   border-bottom: 1px solid #343a71;
-  padding: 0 15vw;
+  padding: 0 calc(15vw - 20px); /* 15vw + 20px + 40vw + 20px + 15vw */
   justify-content: space-between;
   align-items: center;
 
@@ -19,6 +19,12 @@
 
     &:hover {
       background-color: #222;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    & {
+      padding: 5vw;
     }
   }
 }
