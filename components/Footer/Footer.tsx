@@ -1,22 +1,30 @@
 import { FC } from "react";
 import styles from "./Footer.module.scss";
 import Image from "next/image";
-import twitterSvg from '../../public/twitter_logo.svg'
+import twitterSvg from "../../public/twitter_logo.svg";
+import githubSvg from "../../public/github_logo.svg";
+import mediumSvg from "../../public/medium_logo.svg";
 
 const Footer: FC = () => {
   return (
     <footer className={styles.footer}>
-      <p className="contact-info">
-        <a href="mailto:codestar@ordina.nl">codestar@ordina.nl</a>
-        <a href="tel:+31306637000">+31 30 6637000</a>
-        <a
-          href="https://maps.google.com/maps?ll=52.057652,5.111462&z=16&t=m&hl=en-GB&gl=NL&mapclient=embed&cid=15918536717636328792"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Ringwade 1, 3439 LM Nieuwegein
-        </a>
-      </p>
+      <ul className="contact-info">
+        <li>
+          <a href="mailto:codestar@ordina.nl">codestar@ordina.nl</a>
+        </li>
+        <li>
+          <a href="tel:+31306637000">+31 30 6637000</a>
+        </li>
+        <li>
+          <a
+            href="https://maps.google.com/maps?ll=52.057652,5.111462&z=16&t=m&hl=en-GB&gl=NL&mapclient=embed&cid=15918536717636328792"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ringwade 1, 3439 LM Nieuwegein
+          </a>
+        </li>
+      </ul>
 
       <p className="social-links">
         <a href="https://twitter.com/codestar_nl" aria-label="Twitter">
@@ -28,30 +36,10 @@ const Footer: FC = () => {
           />
         </a>
         <a href="https://github.com/code-star" aria-label="Github">
-          <Image
-            src="/codestar-website-next/github_logo.svg"
-            alt="Codestar Github"
-            width={32}
-            height={32}
-          />
+          <Image src={githubSvg} alt="Codestar Github" width={32} height={32} />
         </a>
         <a href="https://medium.com/codestar-blog" aria-label="Medium">
-          <svg
-            width={32}
-            aria-hidden="true"
-            focusable="false"
-            data-prefix="fab"
-            data-icon="medium-m"
-            className="svg-inline--fa fa-medium-m fa-w-16 fa-3x px-2"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
-            <path
-              fill="currentColor"
-              d="M71.5 142.3c.6-5.9-1.7-11.8-6.1-15.8L20.3 72.1V64h140.2l108.4 237.7L364.2 64h133.7v8.1l-38.6 37c-3.3 2.5-5 6.7-4.3 10.8v272c-.7 4.1 1 8.3 4.3 10.8l37.7 37v8.1H307.3v-8.1l39.1-37.9c3.8-3.8 3.8-5 3.8-10.8V171.2L241.5 447.1h-14.7L100.4 171.2v184.9c-1.1 7.8 1.5 15.6 7 21.2l50.8 61.6v8.1h-144v-8L65 377.3c5.4-5.6 7.9-13.5 6.5-21.2V142.3z"
-            ></path>
-          </svg>
+          <Image src={mediumSvg} alt="Codestar Medium" width={32} height={32} />
         </a>
         <a
           href="https://www.linkedin.com/company/codestar-powered-by-ordina/"

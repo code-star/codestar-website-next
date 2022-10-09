@@ -3,9 +3,11 @@
   padding: 8rem calc(15vw - 40px) 2rem;
 
   & :global(.contact-info) {
-    a {
-      display: block;
-      margin: 4px;
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 8px;
     }
   }
 
