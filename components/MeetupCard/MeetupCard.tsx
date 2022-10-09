@@ -3,7 +3,7 @@ import { FC } from "react";
 import styles from "./MeetupCard.module.scss";
 
 interface MeetupCardProps {
-  highlight: boolean;
+  highlight?: boolean;
   image?: string;
   children?: React.ReactNode;
 }
