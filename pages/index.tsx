@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import EmbeddedSocialMedia from "../components/EmbeddedSocialMedia/EmbeddedSocialMedia";
+import Footer from "../components/Footer/Footer";
 import MeetupCardList from "../components/MeetupCardList/MeetupCardList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
@@ -102,14 +103,7 @@ const Home: NextPage<IHomeProps> = ({
         </aside>
       </div>
 
-      <footer className={styles.footer}>
-        <p>codestar@ordina.nl</p>
-        <p>+31 30 6637000</p>
-        <p>Ringwade 1, 3439 LM Nieuwegein</p>
-        {/* TODO <p>
-          [twitter] [github] [medium] [youtube] [linkedin] [youtube] [meetup]
-        </p> */}
-      </footer>
+      <Footer />
     </div>
   );
 };

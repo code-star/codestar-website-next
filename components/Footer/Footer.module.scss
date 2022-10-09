@@ -1,0 +1,17 @@
+.footer {
+  background-color: #343a40;
+  padding: 8rem calc(15vw - 40px) 2rem;
+
+  & :global(.contact-info) {
+    a {
+      display: block;
+      margin: 4px;
+    }
+  }
+
+  & :global(.social-links) {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+  }
+}
