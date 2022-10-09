@@ -5,12 +5,12 @@ interface ITwitterUserResponse {
 }
 
 interface ITweetsResponse {
-  data: { id: string; text: string }[];
+  data: { id: string; text: string; created_at: string }[];
   includes: { users: { username: string }[] };
 }
 
 export interface ITweets {
-  data: { id: string; text: string }[];
+  data: { id: string; text: string; created_at: string }[];
   author: { username: string };
 }
 
@@ -45,13 +45,13 @@ const getUserId = async (
   }
 };
 
-export const getTweets = async (): Promise<ITweets | undefined> => {
+export const getTweets = async (): Promise<ITweets | null> => {
   const { TWITTER_ACCESS_TOKEN, TWITTER_USER_NAME } = process.env;
   const count = 5;
 
   if (!TWITTER_ACCESS_TOKEN || !TWITTER_USER_NAME) {
     console.log("getTweets envars not set");
-    return;
+    return null;
   }
 
   try {
@@ -66,17 +66,17 @@ export const getTweets = async (): Promise<ITweets | undefined> => {
     });
     if (response.ok) {
       const tweets: ITweetsResponse = await response.json();
-      console.log(tweets)
+      console.log(tweets, "USERS", tweets.includes.users);
       return {
         data: tweets.data,
         author: tweets.includes.users[0],
       };
     } else {
       console.log("getTweets not ok");
-      return;
+      return null;
     }
   } catch (err) {
     console.log("error: " + err);
-    return;
+    return null;
   }
 };

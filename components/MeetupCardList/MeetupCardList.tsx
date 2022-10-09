@@ -22,6 +22,7 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
             <MeetupCard>
               <h3>{p.name}</h3>
               <p>{formatDate(p.time)}</p>
+              <a href={p.link}>SIGN UP!</a>
             </MeetupCard>
           </a>
         );
