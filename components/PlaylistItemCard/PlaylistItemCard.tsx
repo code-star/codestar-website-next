@@ -12,7 +12,7 @@ const PlaylistItemCard: FC<{ item: IPlaylistItem }> = ({ item }) => {
         <div
           className="img"
           style={{
-            backgroundImage: `url(${thumbnails.default.url})`,
+            backgroundImage: `url(${thumbnails.medium.url})`,
           }}
         ></div>
         <h3>{title}</h3>

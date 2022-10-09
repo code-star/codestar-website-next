@@ -1,3 +1,9 @@
+interface IThumbnail {
+  url: string;
+  width: number;
+  height: number;
+}
+
 export interface IPlaylistResponse {
   items: Array<{
     contentDetails: {
@@ -8,12 +14,9 @@ export interface IPlaylistResponse {
       title: string;
       description: string;
       thumbnails: {
-        default: {
-          url: string;
-          width: number;
-          height: number;
-        };
-        // medium, high, standard, maxres
+        default: IThumbnail;
+        medium: IThumbnail;
+        // high, standard, maxres
       };
     };
   }>;
@@ -25,10 +28,7 @@ export interface IPlaylistItem {
   title: string;
   description: string[];
   thumbnails: {
-    default: {
-      url: string;
-      width: number;
-      height: number;
-    };
+    default: IThumbnail;
+    medium: IThumbnail;
   };
 }
