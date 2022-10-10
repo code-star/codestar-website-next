@@ -1,0 +1,17 @@
+@import "../constants";
+
+.tweet-card {
+  display: none;
+  border: 1px solid $highlight-card-bg;
+  border-radius: $card-border-radius;
+  padding: 1rem;
+
+  p:first-child {
+    color: $underline-text;
+  }
+
+  @media (min-width: $main-width) {
+    display: block;
+    width: 330px;
+  }
+}
