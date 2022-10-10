@@ -13,23 +13,24 @@ const TweetCard: FC<ITweetCardProps> = ({ tweets }) => {
   if (!tweets) {
     return <></>;
   }
+  const { author, data } = tweets;
   return (
     <section className={styles["tweet-card"]}>
-      {/* <p>{tweets.author.username}</p>{" "} */}
-      {tweets.data.map((d) => (
-        <div key={d.id}>
+      <a href={`https://twitter.com/${author.username}`}>@{author.username}</a>
+      {data.map(({ id, text, created_at }) => (
+        <div key={id}>
           <p>
             <Image
               src={twitterSvg}
               alt="Codestar Twitter"
               width={24}
               height={24}
-            />{" "}
-            {formatDate(d["created_at"])}
+            />
+            <span>{formatDate(created_at)}</span>
           </p>
-          <p>{d.text}</p>
+          <p>{text}</p>
         </div>
-      ))}{" "}
+      ))}
     </section>
   );
 };
