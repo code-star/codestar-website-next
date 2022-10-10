@@ -1,0 +1,19 @@
+@import "../constants";
+
+.upcoming-meetup-list {
+  &:global(.viewport-xs) {
+    display: block;
+
+    @media screen and (min-width: $main-min-width) {
+      display: none;
+    }
+  }
+
+  &:global(.viewport-sm) {
+    display: none;
+
+    @media screen and (min-width: $main-min-width) {
+      display: block;
+    }
+  }
+}

@@ -7,6 +7,7 @@ import Footer from "../components/Footer/Footer";
 import MeetupCardList from "../components/MeetupCardList/MeetupCardList";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
+import UpcomingMeetupList from "../components/UpcomingMeetupList/UpcomingMeetupList";
 import WelcomeCard from "../components/WelcomeCard/WelcomeCard";
 import { getPastMeetups } from "../lib/meetup/getPastMeetups";
 import { getUpcomingMeetups } from "../lib/meetup/getUpcomingMeetups";
@@ -66,8 +67,13 @@ const Home: NextPage<IHomeProps> = ({
         <aside>
           <EmbeddedSocialMedia tweets={tweets} playlist={playlist ?? []} />
         </aside>
+
         <main className={styles.main}>
           <WelcomeCard />
+          <UpcomingMeetupList
+            upcomingMeetups={upcomingMeetups || []}
+            viewport="xs"
+          />
           {publications ? (
             <PublicationList publications={publications} />
           ) : (

@@ -1,0 +1,27 @@
+@import "../constants";
+
+.upcoming-meetup-card {
+  width: $aside-width;
+  border-radius: 4px;
+  background-color: $highlight-card-bg;
+  padding: 1rem;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    font-size: 80%;
+    margin-top: 2px;
+    color: $underline-text;
+  }
+
+  > a {
+    display: inline-block;
+    background-color: $orange;
+    border-radius: 4px;
+    padding: 8px;
+    font-weight: bold;
+    color: black;
+  }
+}

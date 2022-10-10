@@ -3,6 +3,7 @@ import { formatDate } from "../../lib/formatDate";
 import { IMeetupEvent } from "../../lib/meetup/meetup.types";
 import MeetupCard from "../MeetupCard/MeetupCard";
 import MeetupListItem from "../MeetupListItem.tsx/MeetupListItem";
+import UpcomingMeetupList from "../UpcomingMeetupList/UpcomingMeetupList";
 import styles from "./MeetupCardList.module.scss";
 
 interface IMeetupCardListProps {
@@ -16,7 +17,8 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
 }) => {
   return (
     <div className={styles["meetup-list"]}>
-      {upcomingMeetups.map((p) => {
+      <UpcomingMeetupList upcomingMeetups={upcomingMeetups} viewport="sm" />
+      {/* {upcomingMeetups.map((p) => {
         return (
           <a key={p.name} href={p.link}>
             <MeetupCard highlight image={p.featured_photo?.photo_link}>
@@ -26,7 +28,7 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
             </MeetupCard>
           </a>
         );
-      })}
+      })} */}
 
       <h2>PAST MEETUPS</h2>
       <MeetupCard>

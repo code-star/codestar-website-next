@@ -1,8 +1,14 @@
+@import "./components/constants";
+
 .content {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 20px;
+  display: block;
+
+  @media (min-width: $main-min-width) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+  }
 }
 
 .main {
