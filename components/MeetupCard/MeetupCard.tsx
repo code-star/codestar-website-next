@@ -18,7 +18,7 @@ const MeetupCard: FC<MeetupCardProps> = ({
   }`;
   return (
     <section className={classNames}>
-      {image && <Image alt="" src={image} width="100%" />}
+      {image && <Image alt="" src={image} width={350} height={200} />}
       {children}
     </section>
   );

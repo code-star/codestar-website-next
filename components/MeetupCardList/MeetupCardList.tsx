@@ -19,7 +19,7 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
       {upcomingMeetups.map((p) => {
         return (
           <a key={p.name} href={p.link}>
-            <MeetupCard highlight>
+            <MeetupCard highlight image={p.featured_photo?.photo_link}>
               <h3>{p.name}</h3>
               <p>{formatDate(p.time)}</p>
               <a href={p.link}>SIGN UP!</a>
