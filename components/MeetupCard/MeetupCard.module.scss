@@ -1,8 +1,7 @@
 @import "../constants";
 
 .meetup-card {
-  width: 15vw;
-  // padding: 1rem;
+  width: $aside-width;
   border-radius: 4px;
 
   & > ul {

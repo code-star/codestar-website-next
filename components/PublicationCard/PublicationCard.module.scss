@@ -2,7 +2,7 @@
 
 .publication-card {
   border-radius: 4px;
-  width: 40vw;
+  width: 100%;
   padding: 0 10px;
 
   &:hover {
@@ -15,10 +15,10 @@
     padding: 1rem;
   }
 
-
-  @media screen and (max-width: 900px) {
+  @media screen and (min-width: $main-min-width) {
     & {
-      width: 90vw;
+      min-width: calc($main-min-width - (2 * $aside-width));
+      width: calc($main-width - (2 * $aside-width) - 40px);
     }
   }
 }

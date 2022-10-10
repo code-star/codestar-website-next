@@ -6,13 +6,13 @@ import { IPlaylistItem } from "../../lib/youtube-playlist/youtube-playlist.types
 import PlaylistItemCard from "../PlaylistItemCard/PlaylistItemCard";
 import styles from "./EmbeddedSocialMedia.module.scss";
 import Image from "next/image";
-import twitterSvg from '../../public/twitter_logo.svg'
+import twitterSvg from "../../public/twitter_logo.svg";
 interface EmbeddedSocialMediaProps {
   tweets: ITweets | null;
   playlist: IPlaylistItem[];
 }
 
-const TweetCard = ({ tweets }: { tweets?: ITweets | null}) => {
+const TweetCard = ({ tweets }: { tweets?: ITweets | null }) => {
   if (!tweets) {
     return <></>;
   }
@@ -26,17 +26,20 @@ const TweetCard = ({ tweets }: { tweets?: ITweets | null}) => {
   text 
   */
   return (
-    <section style={{ width: "15vw" }}>
+    <section style={{ width: 330 }}>
       {/* <p>{tweets.author.username}</p>{" "} */}
       {tweets.data.map((d) => (
         <div key={d.id}>
           {/* TODO icon <p>[icon] {formatDate(d["created_at"])}</p> */}
-          <p><Image
-            src={twitterSvg}
-            alt="Codestar Twitter"
-            width={24}
-            height={24}
-          />  {formatDate(d["created_at"])}</p>
+          <p>
+            <Image
+              src={twitterSvg}
+              alt="Codestar Twitter"
+              width={24}
+              height={24}
+            />{" "}
+            {formatDate(d["created_at"])}
+          </p>
           <p>{d.text}</p>
         </div>
       ))}{" "}

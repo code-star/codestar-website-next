@@ -73,22 +73,6 @@ const Home: NextPage<IHomeProps> = ({
           ) : (
             "Failed"
           )}
-
-          {/* <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p> */}
-
-          {/* <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <Link href="/events" className={styles.card}>
-            Codestar events
-          </Link>
-        </div> */}
         </main>
 
         <aside>

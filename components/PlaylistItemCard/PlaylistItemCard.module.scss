@@ -5,7 +5,7 @@
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  width: 15vw;
+  width: $aside-width;
   gap: 10px;
 
   & > :global(.img) {
