@@ -1,6 +1,14 @@
 @import "../constants";
 
 .upcoming-meetup-list {
+  padding: 1rem;
+  width: 100%;
+
+  @media (min-width: $main-width) {
+    padding: 0;
+    width: $aside-width;
+  }
+
   &:global(.viewport-xs) {
     display: block;
 
