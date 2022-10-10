@@ -30,6 +30,7 @@ jobs:
           echo YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }} >> .env
           echo YOUTUBE_PLAYLIST_ID=${{ secrets.YOUTUBE_PLAYLIST_ID }} >> .env
           npm ci
+          echo "{ \"basePath\": \"/codestar-website-next\" }" > config.json
           npx next build && npx next export
           touch out/.nojekyll
         #     CI: false # true -> fails on warning
