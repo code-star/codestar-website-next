@@ -54,7 +54,7 @@ const Home: NextPage<IHomeProps> = ({
   playlist,
 }) => {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Codestar</title>
         <meta name="description" content="Codestar blog" />
@@ -94,7 +94,7 @@ const Home: NextPage<IHomeProps> = ({
       </div>
 
       <Footer />
-    </div>
+    </>
   );
 };
 

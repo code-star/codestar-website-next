@@ -4,7 +4,7 @@
   &:global(.viewport-xs) {
     display: block;
 
-    @media screen and (min-width: $main-min-width) {
+    @media screen and (min-width: $main-width) {
       display: none;
     }
   }
@@ -12,7 +12,7 @@
   &:global(.viewport-sm) {
     display: none;
 
-    @media screen and (min-width: $main-min-width) {
+    @media screen and (min-width: $main-width) {
       display: block;
     }
   }

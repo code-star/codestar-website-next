@@ -3,7 +3,7 @@
 .content {
   display: block;
 
-  @media (min-width: $main-min-width) {
+  @media (min-width: $main-width) {
     display: flex;
     align-items: flex-start;
     justify-content: center;

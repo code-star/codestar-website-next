@@ -6,6 +6,7 @@
   border-bottom: 1px solid #343a71;
   display: flex;
   justify-content: center;
+  // width: 100%;
 
   & > div {
     display: flex;
@@ -14,7 +15,7 @@
     padding: 0 1rem;
     width: 100%;
 
-    @media screen and (min-width: $main-min-width) {
+    @media screen and (min-width: $main-width) {
       padding: 0;
       min-width: $main-min-width;
       width: $main-width;

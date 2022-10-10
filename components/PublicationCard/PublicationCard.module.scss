@@ -15,7 +15,7 @@
     padding: 1rem;
   }
 
-  @media screen and (min-width: $main-min-width) {
+  @media screen and (min-width: $main-width) {
     & {
       min-width: calc($main-min-width - (2 * $aside-width));
       width: calc($main-width - (2 * $aside-width) - 40px);

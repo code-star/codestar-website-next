@@ -10,7 +10,7 @@
     padding: 0 1rem;
     width: 100%;
 
-    @media screen and (min-width: $main-min-width) {
+    @media screen and (min-width: $main-width) {
       padding: 0;
       min-width: $main-min-width;
       width: $main-width;
