@@ -1,7 +1,7 @@
 import { IPlaylistItem, IPlaylistResponse } from "./youtube-playlist.types";
 
 export const getYoutubePlaylist = async (): Promise<
-  Array<IPlaylistItem> | undefined
+  Array<IPlaylistItem> | null
 > => {
   const { YOUTUBE_API_KEY, YOUTUBE_PLAYLIST_ID } = process.env;
   const count = 5;
@@ -22,9 +22,8 @@ export const getYoutubePlaylist = async (): Promise<
       }));
       return items;
     } else {
-      // TODO highlight titles on hover for playlist items and meetups_
+      // TODO highlight titles on hover for playlist items and meetups
       console.log("getYoutubePlaylist not ok");
-      // TODO fix env loading on github pages_
       return [
         {
           id: "1",
@@ -48,6 +47,6 @@ export const getYoutubePlaylist = async (): Promise<
     }
   } catch (err) {
     console.log("error: " + err);
-    return;
+    return null;
   }
 };

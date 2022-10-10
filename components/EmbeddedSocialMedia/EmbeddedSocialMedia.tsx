@@ -5,6 +5,7 @@ import { IPlaylistItem } from "../../lib/youtube-playlist/youtube-playlist.types
 import PlaylistItemCard from "../PlaylistItemCard/PlaylistItemCard";
 import styles from "./EmbeddedSocialMedia.module.scss";
 import TweetCard from "../TweetCard/TweetCard";
+import Playlist from "../Playlist/Playlist";
 
 interface EmbeddedSocialMediaProps {
   tweets: ITweets | null;
@@ -18,12 +19,7 @@ const EmbeddedSocialMedia: FC<EmbeddedSocialMediaProps> = ({
   return (
     <div className={styles["embedded-social-media"]}>
       <TweetCard tweets={tweets} />
-      {playlist.map((item) => {
-        return <PlaylistItemCard key={item.id} item={item} />;
-      })}
-      <p>
-        <Link href="https://youtube.com/c/codestar">More ...</Link>
-      </p>
+      <Playlist playlist={playlist} viewport="sm" />
     </div>
   );
 };

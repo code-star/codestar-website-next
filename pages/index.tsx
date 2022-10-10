@@ -5,6 +5,7 @@ import Link from "next/link";
 import EmbeddedSocialMedia from "../components/EmbeddedSocialMedia/EmbeddedSocialMedia";
 import Footer from "../components/Footer/Footer";
 import MeetupCardList from "../components/MeetupCardList/MeetupCardList";
+import Playlist from "../components/Playlist/Playlist";
 import PublicationList from "../components/PublicationList/PublicationList";
 import TopBar from "../components/TopBar/TopBar";
 import UpcomingMeetupList from "../components/UpcomingMeetupList/UpcomingMeetupList";
@@ -24,7 +25,7 @@ interface IHomeStaticProps {
   upcomingMeetups?: IMeetupEvent[] | null;
   pastMeetups?: IMeetupEvent[] | null;
   tweets: ITweets | null;
-  playlist: IPlaylistItem[] | undefined;
+  playlist: IPlaylistItem[] | null;
 }
 
 type IHomeProps = IHomeStaticProps;
@@ -79,6 +80,7 @@ const Home: NextPage<IHomeProps> = ({
           ) : (
             "Failed"
           )}
+          <Playlist playlist={playlist || []} viewport="xs" />
         </main>
 
         <aside>

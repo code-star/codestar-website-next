@@ -10,6 +10,24 @@
     justify-content: center;
     gap: 20px;
   }
+
+  :global {
+    .viewport-xs {
+      display: inherit;
+
+      @media screen and (min-width: $main-width) {
+        display: none;
+      }
+    }
+
+    .viewport-sm {
+      display: none;
+
+      @media screen and (min-width: $main-width) {
+        display: inherit;
+      }
+    }
+  }
 }
 
 .main {

@@ -25,7 +25,7 @@ const MeetupCardList: FC<IMeetupCardListProps> = ({
             return <MeetupListItem key={p.name} meetup={p} />;
           })}
           <li>
-            <a href="https://www.meetup.com/codestar-night/events/past/">
+            <a className="external" href="https://www.meetup.com/codestar-night/events/past/">
               More past meetups...
             </a>
           </li>
