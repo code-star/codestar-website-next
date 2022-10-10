@@ -1,0 +1,43 @@
+name: Deploy to Prod (https://code-star.github.io/)
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install and Build components 🔧
+        # .nojekyll: do not ignore _ dirs
+        run: |
+          touch .env
+          echo TWITTER_ACCESS_TOKEN=${{ secrets.TWITTER_ACCESS_TOKEN }} >> .env
+          echo TWITTER_USER_NAME=${{ secrets.TWITTER_USER_NAME }} >> .env
+          echo YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }} >> .env
+          echo YOUTUBE_PLAYLIST_ID=${{ secrets.YOUTUBE_PLAYLIST_ID }} >> .env
+          npm ci
+          npx next build && npx next export
+          touch out/.nojekyll
+      #     CI: false # true -> fails on warning
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }} # Access token from the Prod repo, set in Settings > Secrets
+          repository-name: code-star/code-star.github.io
+          branch: master # The branch the action should deploy to.
+          folder: build # The folder the action should deploy.
+          clean: true # Automatically remove deleted files from the deploy branch
