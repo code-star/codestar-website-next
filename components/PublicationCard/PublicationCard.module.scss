@@ -25,12 +25,14 @@
 
 .publication-card--avatar {
   background-color: $orange;
+  background-size: 50px;
   border-radius: 50%;
   color: black;
-  height: 20px;
-  min-width: 20px;
+  height: 50px;
+  min-width: 50px;
   position: relative;
   text-align: center;
+  font-size: 40px;
 }
 
 .publication-card--author {
