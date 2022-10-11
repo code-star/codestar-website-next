@@ -4,6 +4,10 @@
   padding: 1rem;
   width: 100%;
 
+  & > :global(a) {
+    width: 100%;
+  }
+  
   @media (min-width: $main-width) {
     padding: 0;
     width: $aside-width;
