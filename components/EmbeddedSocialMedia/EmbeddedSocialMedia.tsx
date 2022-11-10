@@ -4,7 +4,6 @@ import { ITweets } from "../../lib/twitter/getTweets";
 import { IPlaylistItem } from "../../lib/youtube-playlist/youtube-playlist.types";
 import Playlist from "../Playlist/Playlist";
 import TootCard from "../TootCard/TootCard";
-import TweetCard from "../TweetCard/TweetCard";
 import styles from "./EmbeddedSocialMedia.module.scss";
 
 interface EmbeddedSocialMediaProps {
@@ -15,13 +14,12 @@ interface EmbeddedSocialMediaProps {
 
 const EmbeddedSocialMedia: FC<EmbeddedSocialMediaProps> = ({
   toots,
-  tweets,
   playlist,
 }) => {
   return (
     <div className={styles["embedded-social-media"]}>
       <TootCard toots={toots} />
-      <TweetCard tweets={tweets} />
+      {/* <TweetCard tweets={tweets} /> */}
       <Playlist playlist={playlist} viewport="sm" />
     </div>
   );

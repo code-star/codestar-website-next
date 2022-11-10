@@ -1,3 +1,5 @@
+import { convert } from "html-to-text";
+
 interface IMastodonAccountResponse {
   id: string;
   username: string;
@@ -29,8 +31,18 @@ interface ITootResponse {
 
 type AccountsStatusesResponse = ITootResponse[];
 
+interface IToot {
+  id: string;
+  text: string;
+  created_at: string;
+  url: string;
+  reblogs_count: number;
+  replies_count: number;
+  favourites_count: number;
+}
+
 export interface IToots {
-  data: { id: string; text: string; created_at: string }[];
+  data: IToot[];
   author: { username: string; url: string };
 }
 
@@ -61,6 +73,27 @@ const getTootsById = async (
   }
 };
 
+const mapTootResponseToToot = ({
+  id,
+  created_at,
+  content,
+  url,
+  reblogs_count,
+  replies_count,
+  favourites_count,
+}: ITootResponse): IToot => ({
+  id,
+  created_at,
+  url,
+  text: convert(content, {
+    wordwrap: 130,
+    ignoreHref: true,
+  }),
+  replies_count,
+  reblogs_count,
+  favourites_count,
+});
+
 export const getToots = async (): Promise<IToots | null> => {
   const { MASTODON_ACCESS_TOKEN, MASTODON_ID } = process.env;
   const count = 2;
@@ -77,11 +110,7 @@ export const getToots = async (): Promise<IToots | null> => {
       throw Error(`no toots found for ${MASTODON_ID}`);
     }
     return {
-      data: toots.slice(0, count).map(({ id, created_at, content }) => ({
-        id,
-        created_at,
-        text: content,
-      })),
+      data: toots.slice(0, count).map(mapTootResponseToToot),
       author: {
         username: toots[0].account.username,
         url: toots[0].account.url,

@@ -6,7 +6,7 @@
   border-radius: $card-border-radius;
   padding: 1rem;
 
-  a {
+  > a {
     display: block;
     text-align: right;
     font-weight: bold;
@@ -19,8 +19,19 @@
     gap: 10px;
   }
 
+  div > a {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
   @media (min-width: $main-width) {
     display: block;
     width: $aside-width;
   }
+}
+
+.toot-card--badges {
+  display: flex;
+  gap: 0.7rem;
+  cursor: default;
 }
