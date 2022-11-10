@@ -34,4 +34,17 @@
   display: flex;
   gap: 0.7rem;
   cursor: default;
+  align-items: start;
+
+  > span {
+    display: flex;
+    gap: 0.3rem;
+    align-items: start;
+    padding: 0.2rem;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: $highlight-card-bg;
+    }
+  }
 }

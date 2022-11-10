@@ -3,6 +3,9 @@ import { FC } from "react";
 import { formatDate } from "../../lib/formatDate";
 import { IToots } from "../../lib/mastodon/getToots";
 import mastodonSvg from "../../public/mastodon_logo.svg";
+import replySvg from "../../public/fa-reply.svg";
+import retweetSvg from "../../public/fa-retweet.svg";
+import starSvg from "../../public/fa-star.svg";
 import styles from "./TootCard.module.scss";
 
 interface ITootCardProps {
@@ -39,9 +42,18 @@ const TootCard: FC<ITootCardProps> = ({ toots }) => {
             </p>
             <a href={url}>{text}</a>
             <div className={styles["toot-card--badges"]}>
-              <span title="replies">↩️ {replies_count}</span>{" "}
-              <span title="reblogs">🔁 {reblogs_count}</span>{" "}
-              <span title="favourites">⭐ {favourites_count}</span>
+              <span title="Replies">
+                <Image src={replySvg} alt="Replies" width={18} height={18} />
+                {replies_count}
+              </span>
+              <span title="Reblogs">
+                <Image src={retweetSvg} alt="Reblogs" width={18} height={18} />
+                {reblogs_count}
+              </span>
+              <span title="Favourites">
+                <Image src={starSvg} alt="Favourites" width={18} height={18} />
+                {favourites_count}
+              </span>
             </div>
           </div>
         )
