@@ -16,9 +16,9 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install and Build components 🔧
@@ -29,13 +29,15 @@ jobs:
           echo TWITTER_USER_NAME=${{ secrets.TWITTER_USER_NAME }} >> .env
           echo YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }} >> .env
           echo YOUTUBE_PLAYLIST_ID=${{ secrets.YOUTUBE_PLAYLIST_ID }} >> .env
+          echo MASTODON_ACCESS_TOKEN=${{ secrets.MASTODON_ACCESS_TOKEN }} >> .env
+          echo MASTODON_ID=${{ secrets.MASTODON_ID }} >> .env
           npm ci
           echo "{ \"basePath\": \"/codestar-website-next\" }" > config.json
           npx next build && npx next export
           touch out/.nojekyll
         #     CI: false # true -> fails on warning
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.0.0
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages # The branch the action should deploy to.
