@@ -18,8 +18,8 @@ const formatDate = (time: string) =>
 const UpcomingMeetupCard: FC<IUpcomingMeetupCardProps> = ({ meetup }) => {
   const { link, featured_photo, name, time } = meetup;
   return (
-    <a href={link}>
-      <section className={styles["upcoming-meetup-card"]}>
+    <a href={link} className={styles["upcoming-meetup-card"]}>
+      <section>
         <h2>MEETUP</h2>
         <h3>{name}</h3>
         {featured_photo && (
@@ -31,7 +31,7 @@ const UpcomingMeetupCard: FC<IUpcomingMeetupCardProps> = ({ meetup }) => {
           />
         )}
         <p>
-          <a href={link}>SIGN UP FOR {formatDate(time).toUpperCase()}</a>
+          <button>SIGN UP FOR {formatDate(time).toUpperCase()}</button>
         </p>
       </section>
     </a>

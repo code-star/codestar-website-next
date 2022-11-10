@@ -22,6 +22,12 @@
   div > a {
     display: block;
     margin-bottom: 0.5rem;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   @media (min-width: $main-width) {
@@ -34,12 +40,12 @@
   display: flex;
   gap: 0.7rem;
   cursor: default;
-  align-items: start;
+  align-items: flex-start;
 
   > span {
     display: flex;
     gap: 0.3rem;
-    align-items: start;
+    align-items: flex-start;
     padding: 0.2rem;
     border-radius: 4px;
 
