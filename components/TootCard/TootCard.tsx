@@ -16,7 +16,7 @@ const TootCard: FC<ITootCardProps> = ({ toots }) => {
   const { author, data } = toots;
   return (
     <section className={styles["toot-card"]}>
-      <a href={`https://mastodon.social/${author.username}`}>@{author.username}</a>
+      <a href={author.url}>@{author.username}@mastodon.social</a>
       {data.map(({ id, text, created_at }) => (
         <div key={id}>
           <p>
