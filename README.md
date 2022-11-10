@@ -35,10 +35,11 @@ Merges to the `production` branch are automatically deployed to the production e
 
 Settings for Github Actions:
 
-- under github.com > settings > security/secrets > actions > add new repository secret:
+- Under github.com > settings > security/secrets > actions > add new repository secret:
   - TWITTER_ACCESS_TOKEN
   - TWITTER_USER_NAME
   - YOUTUBE_API_KEY
   - YOUTUBE_PLAYLIST_ID
   - MASTODON_ACCESS_TOKEN
   - MASTODON_ID
+- Also make sure a mapping exists for each key in test.yml and prod.yml
