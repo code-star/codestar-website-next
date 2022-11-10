@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styles from "./Footer.module.scss";
 import Image from "next/image";
+import mastodonSvg from "../../public/mastodon_logo.svg";
 import twitterSvg from "../../public/twitter_logo.svg";
 import githubSvg from "../../public/github_logo.svg";
 import mediumSvg from "../../public/medium_logo.svg";
@@ -31,6 +32,14 @@ const Footer: FC = () => {
         </ul>
 
         <p className="social-links">
+        <a href="https://mastodon.social/@codestar" aria-label="Mastodon">
+            <Image
+              src={mastodonSvg}
+              alt="Codestar Mastodon"
+              width={32}
+              height={32}
+            />
+          </a>
           <a href="https://twitter.com/codestar_nl" aria-label="Twitter">
             <Image
               src={twitterSvg}

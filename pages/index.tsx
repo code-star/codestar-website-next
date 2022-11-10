@@ -16,6 +16,7 @@ import { IMeetupEvent } from "../lib/meetup/meetup.types";
 import { getPublications } from "../lib/publications/getPublications";
 import { IPublication } from "../lib/publications/publications.types";
 import { getTweets, ITweets } from "../lib/twitter/getTweets";
+import { getToots, IToots } from "../lib/mastodon/getToots";
 import { getYoutubePlaylist } from "../lib/youtube-playlist/getYoutubePlaylist";
 import { IPlaylistItem } from "../lib/youtube-playlist/youtube-playlist.types";
 import styles from "../styles/Home.module.scss";
@@ -24,6 +25,7 @@ interface IHomeStaticProps {
   publications?: IPublication[] | null;
   upcomingMeetups?: IMeetupEvent[] | null;
   pastMeetups?: IMeetupEvent[] | null;
+  toots: IToots | null;
   tweets: ITweets | null;
   playlist: IPlaylistItem[] | null;
 }
@@ -34,6 +36,7 @@ export async function getStaticProps(): Promise<{ props: IHomeStaticProps }> {
   const publications = await getPublications();
   const upcomingMeetups = await getUpcomingMeetups();
   const pastMeetups = await getPastMeetups();
+  const toots = await getToots();
   const tweets = await getTweets();
   const playlist = await getYoutubePlaylist();
   return {
@@ -41,6 +44,7 @@ export async function getStaticProps(): Promise<{ props: IHomeStaticProps }> {
       publications,
       upcomingMeetups,
       pastMeetups,
+      toots,
       tweets,
       playlist,
     },
@@ -51,6 +55,7 @@ const Home: NextPage<IHomeProps> = ({
   publications,
   upcomingMeetups,
   pastMeetups,
+  toots,
   tweets,
   playlist,
 }) => {
@@ -66,7 +71,11 @@ const Home: NextPage<IHomeProps> = ({
 
       <div className={styles.content}>
         <aside>
-          <EmbeddedSocialMedia tweets={tweets} playlist={playlist ?? []} />
+          <EmbeddedSocialMedia
+            toots={toots}
+            tweets={tweets}
+            playlist={playlist ?? []}
+          />
         </aside>
 
         <main className={styles.main}>
