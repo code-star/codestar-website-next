@@ -1,6 +1,11 @@
 name: Deploy to Prod (https://code-star.github.io/)
 
 on:
+  workflow_dispatch: # Run workflow manually (without waiting for the cron to be called), through the Github Actions Workflow page directly
+    tags:
+      description: 'Rebuild and deploy to Prod' 
+  schedule: # Run workflow automatically
+    - cron: '0 1 * * *' # Runs every day at 1:00 AM (min hour day month)
   push:
     branches:
       - production
