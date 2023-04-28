@@ -32,7 +32,11 @@ const Footer: FC = () => {
         </ul>
 
         <p className="social-links">
-        <a href="https://mastodon.social/@codestar" aria-label="Mastodon">
+          <a
+            href="https://mastodon.social/@codestar"
+            aria-label="Mastodon"
+            rel="me"
+          >
             <Image
               src={mastodonSvg}
               alt="Codestar Mastodon"
