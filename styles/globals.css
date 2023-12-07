@@ -1,5 +1,3 @@
-
-
 html,
 body {
   padding: 0;
@@ -17,13 +15,13 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    --cs-bg-color: #00254b;
-    color: rgb(205, 205, 205);
-    background: var(--cs-bg-color);
-  }
+/* @media (prefers-color-scheme: dark) { */
+html {
+  color-scheme: dark;
 }
+body {
+  --cs-bg-color: #00254b;
+  color: rgb(205, 205, 205);
+  background: var(--cs-bg-color);
+}
+/* } */
