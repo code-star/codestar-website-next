@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FC } from "react";
 import styles from "./TopBar.module.scss";
 import Image from "next/image";
-import codestarLogo from "../../public/codestar_logo_dark.svg";
+import codestarLogo from "../../public/codestar_logo_cream-red.svg";
 
 const TopBar: FC = () => {
   return (
