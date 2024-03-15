@@ -21,7 +21,8 @@ html {
 }
 body {
   --cs-bg-color: #00254b;
-  color: rgb(205, 205, 205);
+  --cs-text-color: #f1e7da;
+  color: var(--cs-text-color);
   background: var(--cs-bg-color);
 }
 /* } */
