@@ -1,3 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous');
+/* @import url('https://fonts.cdnfonts.com/css/conduit-itc-medium'); */
+
+@font-face {
+  font-family: "Conduit ITC W04 Regular";
+  src: url("https://db.onlinewebfonts.com/t/d032cc8a57ef4a7d2a5ebb7be4e63c71.eot");
+  src: url("https://db.onlinewebfonts.com/t/d032cc8a57ef4a7d2a5ebb7be4e63c71.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/d032cc8a57ef4a7d2a5ebb7be4e63c71.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/d032cc8a57ef4a7d2a5ebb7be4e63c71.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/d032cc8a57ef4a7d2a5ebb7be4e63c71.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/d032cc8a57ef4a7d2a5ebb7be4e63c71.svg#Conduit ITC W04 Regular")format("svg");
+}
+
 html,
 body {
   padding: 0;
@@ -20,8 +33,18 @@ html {
   color-scheme: dark;
 }
 body {
-  --cs-bg-color: #00254b;
-  color: rgb(205, 205, 205);
+  --cs-brutalist-red: #b03a48;
+  --cs-brutalist-orange: #d4804d;
+  --cs-brutalist-yellow: #d6b74b;
+  --cs-brutalist-green: #3e7a4c;
+  --cs-brutalist-blue: #3266a3;
+  --cs-brutalist-purple: #915394;
+  --cs-brutalist-pink: #d980a0;
+  --cs-brutalist-creme: #f1e7da;
+  --cs-white-grey: #cdcdcd;
+  --cs-bg-color: var(--cs-brutalist-blue);
+  --cs-text-color: #151515;
+  color: var(--cs-text-color);
   background: var(--cs-bg-color);
 }
 /* } */

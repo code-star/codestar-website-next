@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="-50 -50 63 16.5"
+   id="svg206"
+   sodipodi:docname="codestar_logo_cream-red.svg"
+   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
+   width="63"
+   height="16.5"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:svgjs="http://svgjs.dev/svgjs">
+  <defs
+     id="defs210" />
+  <sodipodi:namedview
+     id="namedview208"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="9.3363636"
+     inkscape:cx="33.203505"
+     inkscape:cy="55"
+     inkscape:window-width="5065"
+     inkscape:window-height="1387"
+     inkscape:window-x="55"
+     inkscape:window-y="1142"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg206" />
+  <g
+     id="g178"
+     transform="translate(-18.95813,-88.57838)">
+    <text
+       font-family="Righteous"
+       font-size="14px"
+       fill="#f1e7da"
+       x="-31.224573"
+       y="49.113228"
+       svgjs:data="{&quot;leading&quot;:&quot;1.3&quot;}"
+       id="text172"><tspan
+         dy="0"
+         x="-31.224573"
+         svgjs:data="{&quot;newLined&quot;:true}"
+         id="tspan170">c  de.star</tspan></text>
+    <text
+       font-family="'Conduit ITC Medium'"
+       font-size="5px"
+       fill="#f1e7da"
+       x="-3.5427685"
+       y="53.638855"
+       svgjs:data="{&quot;leading&quot;:&quot;1.3&quot;}"
+       id="text176"><tspan
+         dy="0"
+         x="-3.5427685"
+         svgjs:data="{&quot;newLined&quot;:true}"
+         id="tspan174">a sopra steria team</tspan></text>
+  </g>
+  <g
+     id="g186"
+     transform="translate(-18.95813,-88.57838)">
+    <rect
+       width="2"
+       height="8"
+       fill="#b03a48"
+       x="-21.299999"
+       y="41.5"
+       transform="rotate(90,-20.299999,45.5)"
+       id="rect180" />
+    <rect
+       width="2"
+       height="8"
+       fill="#b03a48"
+       x="-21.299999"
+       y="41.5"
+       transform="rotate(30,-20.299999,45.5)"
+       id="rect182" />
+    <rect
+       width="2"
+       height="8"
+       fill="#b03a48"
+       x="-21.299999"
+       y="41.5"
+       transform="rotate(-30,-20.299999,45.5)"
+       id="rect184" />
+  </g>
+</svg>
