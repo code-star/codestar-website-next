@@ -1,7 +1,7 @@
 interface IThumbnail {
-  url: string;
-  width: number;
-  height: number;
+  url?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface IPlaylistResponse {
@@ -27,8 +27,8 @@ export interface IPlaylistItem {
   publishedAt: string;
   title: string;
   description: string[];
-  thumbnails: {
-    default: IThumbnail;
-    medium: IThumbnail;
+  thumbnails?: {
+    default?: IThumbnail;
+    medium?: IThumbnail;
   };
 }
