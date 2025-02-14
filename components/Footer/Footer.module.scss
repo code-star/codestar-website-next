@@ -1,10 +1,13 @@
 @import "../constants";
 
 .footer {
-  background-color: #343a40;
+  background-color: var(--cs-brutalist-purple);
   padding: 8rem 0 2rem;
   display: flex;
   justify-content: center;
+  color: var(--cs-brutalist-creme);
+  font-family: "Conduit ITC W04 Regular", 'system-ui';
+  font-size: 140%;
 
   > div {
     padding: 0 1rem;

@@ -15,7 +15,7 @@ const Footer: FC = () => {
       <div>
         <ul className="contact-info">
           <li>
-            <a href="mailto:codestar@ordina.nl">codestar@ordina.nl</a>
+            <a href="mailto:codestar@ordina.nl">codestar.nl@soprasteria.com</a>
           </li>
           <li>
             <a href="tel:+31306637000">+31 30 6637000</a>
@@ -69,12 +69,12 @@ const Footer: FC = () => {
             />
           </a>
           <a
-            href="https://www.linkedin.com/company/codestar-powered-by-ordina/"
+            href="https://www.linkedin.com/company/codestar-powered-by-sopra-steria/"
             aria-label="Linkedin"
           >
             <Image
               src={linkedinSvg}
-              alt="Codestar Medium"
+              alt="Codestar LinkedIn"
               width={32}
               height={32}
             />
@@ -85,7 +85,7 @@ const Footer: FC = () => {
           >
             <Image
               src={youtubeSvg}
-              alt="Codestar Medium"
+              alt="Codestar Youtube"
               width={36}
               height={32}
             />
@@ -96,7 +96,7 @@ const Footer: FC = () => {
           >
             <Image
               src={meetupSvg}
-              alt="Codestar Medium"
+              alt="Codestar Meetup"
               width={32}
               height={32}
             />

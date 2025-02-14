@@ -6,7 +6,7 @@
   padding: 0 10px;
 
   &:hover {
-    background-color: lighten($highlight-card-bg, 10%);
+    background-color: var(--cs-brutalist-green);
   }
 
   & > section {
@@ -21,10 +21,15 @@
       width: calc($main-width - (2 * $aside-width) - 40px);
     }
   }
+
+  h2 {
+    font-family: "Conduit ITC W04 Regular", 'system-ui';
+    font-size: 180%;
+  }
 }
 
 .publication-card--avatar {
-  background-color: $orange;
+  background-color: $red;
   background-size: 50px;
   border-radius: 50%;
   color: black;
@@ -33,6 +38,7 @@
   position: relative;
   text-align: center;
   font-size: 40px;
+  font-family: "Righteous", sans-serif;
 }
 
 .publication-card--author {
