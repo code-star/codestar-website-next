@@ -18,7 +18,9 @@ const TopBar: FC = () => {
         </li>
         <li>Codelancer</li> */}
           <li>
-            <a href="https://www.ordina.nl/vakgebieden/scala/">Contact</a>
+            <a href="https://www.linkedin.com/company/codestar-powered-by-sopra-steria/">
+              Contact
+            </a>
           </li>
         </ul>
       </div>
