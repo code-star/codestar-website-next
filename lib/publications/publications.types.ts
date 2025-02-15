@@ -17,6 +17,7 @@ export interface IMediumRSSResponse {
     id: string;
     title: string;
     author: string;
+    avatar?: string;
     latestPublishedAt: string;
     uniqueSlug: string;
     paragraphs: string;
