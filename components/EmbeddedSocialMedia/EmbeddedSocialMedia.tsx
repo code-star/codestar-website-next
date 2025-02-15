@@ -8,7 +8,7 @@ import styles from "./EmbeddedSocialMedia.module.scss";
 
 interface EmbeddedSocialMediaProps {
   toots: IToots | null;
-  tweets: ITweets | null;
+  // tweets: ITweets | null;
   playlist: IPlaylistItem[];
 }
 

@@ -26,7 +26,7 @@ interface IHomeStaticProps {
   upcomingMeetups?: IMeetupEvent[] | null;
   pastMeetups?: IMeetupEvent[] | null;
   toots: IToots | null;
-  tweets: ITweets | null;
+  // tweets: ITweets | null;
   playlist: IPlaylistItem[] | null;
 }
 
@@ -37,7 +37,7 @@ export async function getStaticProps(): Promise<{ props: IHomeStaticProps }> {
   const upcomingMeetups = await getUpcomingMeetups();
   const pastMeetups = await getPastMeetups();
   const toots = await getToots();
-  const tweets = await getTweets();
+  // const tweets = await getTweets();
   const playlist = await getYoutubePlaylist();
   return {
     props: {
@@ -45,7 +45,7 @@ export async function getStaticProps(): Promise<{ props: IHomeStaticProps }> {
       upcomingMeetups,
       pastMeetups,
       toots,
-      tweets,
+      // tweets,
       playlist,
     },
   };
@@ -56,7 +56,7 @@ const Home: NextPage<IHomeProps> = ({
   upcomingMeetups,
   pastMeetups,
   toots,
-  tweets,
+  // tweets,
   playlist,
 }) => {
   return (
@@ -73,7 +73,7 @@ const Home: NextPage<IHomeProps> = ({
         <aside>
           <EmbeddedSocialMedia
             toots={toots}
-            tweets={tweets}
+            // tweets={tweets}
             playlist={playlist ?? []}
           />
         </aside>
