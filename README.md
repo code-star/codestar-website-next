@@ -29,9 +29,9 @@ Note: uses static site generation with [NextJS](https://nextjs.org/). As a conse
 
 ## Deploying
 
-Merges to the `main` branch are automatically deployed to the test environment at https://code-star.github.io/codestar-website-next/ by Github Actions. This is served on Github pages from the `gh-pages` branch on this repo.
+Merges to the `main` branch are automatically deployed to the staging environment at https://staging.codestar.nl/ by Github Actions. This is hosted on Github pages.
 
-Merges to the `production` branch are automatically deployed to the production environment at https://code-star.github.io by Github Actions. This is served on Github pages from the `main` branch on the https://github.com/code-star/code-star.github.io repo.
+Merges to the `production` branch are automatically deployed to the production environment at https://code-star.github.io by Github Actions. This is hosted on Github pages from the `main` branch on the https://github.com/code-star/code-star.github.io repo.
 
 Settings for Github Actions:
 
