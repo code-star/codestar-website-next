@@ -1,4 +1,4 @@
-name: Deploy to Test (https://code-star.github.io/codestar-website-next/)
+name: Deploy to Staging (https://staging.codestar.nl)
 
 on:
   push:
@@ -43,9 +43,9 @@ jobs:
           echo MASTODON_ACCESS_TOKEN=${{ secrets.MASTODON_ACCESS_TOKEN }} >> .env
           echo MASTODON_ID=${{ secrets.MASTODON_ID }} >> .env
           npm ci
-          echo "{ \"basePath\": \"/codestar-website-next\" }" > config.json
           npx next build && npx next export
           touch out/.nojekyll
+        # echo "{ \"basePath\": \"/codestar-website-next\" }" > config.json
         #     CI: false # true -> fails on warning
       - name: Setup Pages
         uses: actions/configure-pages@v5
