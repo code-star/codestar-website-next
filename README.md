@@ -1,4 +1,4 @@
-[![test](https://github.com/code-star/codestar-website-next/actions/workflows/test.yml/badge.svg)](https://github.com/code-star/codestar-website-next/actions/workflows/test.yml)
+[![staging](https://github.com/code-star/codestar-website-next/actions/workflows/staging.yml/badge.svg)](https://github.com/code-star/codestar-website-next/actions/workflows/staging.yml)
 
 [![prod](https://github.com/code-star/codestar-website-next/actions/workflows/prod.yml/badge.svg)](https://github.com/code-star/codestar-website-next/actions/workflows/prod.yml)
 
