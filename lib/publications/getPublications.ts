@@ -1,6 +1,8 @@
 import { request as httpsRequest } from "https";
 import { XMLParser } from "fast-xml-parser";
 import { IPublication, IMediumRSSResponse } from "./publications.types";
+import fs from "node:fs";
+import path from "node:path";
 
 const GET_PUBLICATIONS_URL = "https://medium.com/feed/codestar-blog";
 
@@ -27,7 +29,7 @@ const requestXmlString = (url: string): Promise<string> => {
   });
 };
 
-export const getPublications = async (): Promise<IPublication[] | null> => {
+export const getMediumPublications = async (): Promise<IPublication[]> => {
   try {
     const text: string = (await requestXmlString(
       GET_PUBLICATIONS_URL
@@ -46,6 +48,7 @@ export const getPublications = async (): Promise<IPublication[] | null> => {
       uniqueSlug: publication.link,
       paragraphs: publication["content:encoded"] || "",
     }));
+
     return simplePosts;
     // } else {
     //   console.log(
@@ -55,6 +58,85 @@ export const getPublications = async (): Promise<IPublication[] | null> => {
     //   );
     //   return null;
     // }
+  } catch (err) {
+    console.error("error: " + err);
+    return [];
+  }
+};
+
+type Metadata = {
+  title: string;
+  author: string;
+  publishedAt: string;
+  summary: string;
+};
+
+function parseFrontmatter(fileContent: string) {
+  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
+  let match = frontmatterRegex.exec(fileContent);
+  let frontMatterBlock = match![1];
+  let content = fileContent.replace(frontmatterRegex, "").trim();
+  let frontMatterLines = frontMatterBlock.trim().split("\n");
+  let metadata: Partial<Metadata> = {};
+
+  frontMatterLines.forEach((line) => {
+    let [key, ...valueArr] = line.split(": ");
+    let value = valueArr.join(": ").trim();
+    value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
+    metadata[key.trim() as keyof Metadata] = value;
+  });
+
+  return { metadata: metadata as Metadata, content };
+}
+
+function getMDXFiles(dir: string) {
+  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
+}
+
+function readMDXFile(filePath: string) {
+  let rawContent = fs.readFileSync(filePath, "utf-8");
+  return parseFrontmatter(rawContent);
+}
+
+function getMDXData(dir: string) {
+  let mdxFiles = getMDXFiles(dir);
+  return mdxFiles.map((file) => {
+    let { metadata, content } = readMDXFile(path.join(dir, file));
+    let slug = path.basename(file, path.extname(file));
+
+    return {
+      metadata,
+      slug,
+      content,
+    };
+  });
+}
+
+export const getBlogPosts = (): IPublication[] => {
+  return getMDXData(
+    path.join(process.cwd(), "pages", "articles")
+  ).map<IPublication>((m) => ({
+    id: m.slug,
+    author: m.metadata.author,
+    uniqueSlug: "/articles/" + m.slug,
+    title: m.metadata.title,
+    latestPublishedAt: m.metadata.publishedAt,
+    paragraphs: m.content,
+  }));
+};
+
+export const getPublications = async (): Promise<IPublication[] | null> => {
+  try {
+    const blogPosts = getBlogPosts();
+    const mediumPublications = await getMediumPublications();
+
+    return blogPosts
+      .concat(mediumPublications)
+      .sort((publication, otherPublication) => {
+        const date = new Date(publication.latestPublishedAt);
+        const otherDate = new Date(otherPublication.latestPublishedAt);
+        return otherDate.getTime() - date.getTime();
+      });
   } catch (err) {
     console.error("error: " + err);
     return null;
