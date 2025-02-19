@@ -1,0 +1,11 @@
+@import "../constants";
+
+.embedded-social-media {
+  display: none;
+
+  @media screen and (min-width: $main-width) {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+}
