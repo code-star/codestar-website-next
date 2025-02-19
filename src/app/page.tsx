@@ -1,95 +1,68 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
+import { getToots } from "@/lib/mastodon/getToots";
+import EmbeddedSocialMedia from "@/components/EmbeddedSocialMedia/EmbeddedSocialMedia";
+import Head from "next/head";
+import TopBar from "@/components/TopBar/TopBar";
+import Footer from "@/components/Footer/Footer";
+import WelcomeCard from "@/components/WelcomeCard/WelcomeCard";
+import Playlist from "@/components/Playlist/Playlist";
+import { getYoutubePlaylist } from "@/lib/youtube-playlist/getYoutubePlaylist";
+import { getUpcomingMeetups } from "@/lib/meetup/getUpcomingMeetups";
+import { getPublications } from "@/lib/publications/getPublications";
+import PublicationList from "@/components/PublicationList/PublicationList";
+import UpcomingMeetupList from "@/components/UpcomingMeetupList/UpcomingMeetupList";
+import { getPastMeetups } from "@/lib/meetup/getPastMeetups";
+import MeetupCardList from "@/components/MeetupCardList/MeetupCardList";
 
-export default function Home() {
+export default async function Home() {
+  const publications = await getPublications();
+  const pastMeetups = await getPastMeetups();
+  const upcomingMeetups = await getUpcomingMeetups();
+  const toots = await getToots();
+  const playlist = await getYoutubePlaylist();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      <Head>
+        <title>Codestar</title>
+        <meta name="description" content="Codestar blog" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      <TopBar />
+
+      <div className={styles.content}>
+        <aside>
+          <EmbeddedSocialMedia toots={toots} playlist={playlist ?? []} />
+        </aside>
+
+        <main className={styles.main}>
+          <WelcomeCard />
+          <UpcomingMeetupList
+            upcomingMeetups={upcomingMeetups || []}
+            viewport="xs"
+          />
+          {publications ? (
+            <PublicationList publications={publications} />
+          ) : (
+            "Failed"
+          )}
+          <Playlist playlist={playlist || []} viewport="xs" />
+        </main>
+
+        <aside>
+          {pastMeetups || upcomingMeetups ? (
+            <MeetupCardList
+              upcomingMeetups={upcomingMeetups || []}
+              pastMeetups={pastMeetups || []}
             />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          ) : (
+            ""
+          )}
+        </aside>
+      </div>
+
+      <Footer />
+    </>
   );
 }

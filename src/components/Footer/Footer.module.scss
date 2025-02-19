@@ -1,0 +1,37 @@
+@import "../constants";
+
+.footer {
+  background-color: var(--cs-brutalist-purple);
+  padding: 8rem 0 2rem;
+  display: flex;
+  justify-content: center;
+  color: var(--cs-brutalist-creme);
+  font-family: "Conduit ITC W04 Regular", 'system-ui';
+  font-size: 140%;
+
+  > div {
+    padding: 0 1rem;
+    width: 100%;
+
+    @media screen and (min-width: $main-width) {
+      padding: 0;
+      min-width: $main-min-width;
+      width: $main-width;
+    }
+
+    & :global(.contact-info) {
+      list-style-type: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 8px;
+      }
+    }
+
+    & :global(.social-links) {
+      display: flex;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+  }
+}

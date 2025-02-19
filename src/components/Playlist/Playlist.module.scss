@@ -1,0 +1,18 @@
+@import "../constants";
+
+.playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 1rem;
+  width: 100%;
+
+  @media (min-width: $main-width) {
+    padding: 0;
+    width: $aside-width;
+  }
+
+  & p > a {
+    text-decoration: underline;
+  }
+}

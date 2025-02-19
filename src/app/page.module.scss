@@ -1,0 +1,58 @@
+@import "../components/constants";
+
+.content {
+  display: block;
+  margin-top: 20px;
+
+  @media (min-width: $main-width) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  :global(.viewport-xs) {
+    display: inherit;
+
+    @media screen and (min-width: $main-width) {
+      display: none;
+    }
+  }
+
+  :global(.viewport-sm) {
+    display: none;
+
+    @media screen and (min-width: $main-width) {
+      display: inherit;
+    }
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 
+@media (max-width: 600px) {
+  .grid {
+    width: 100%;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .card,
+  .footer {
+    border-color: #222;
+  }
+  .code {
+    background: #111;
+  }
+  .logo img {
+    filter: invert(1);
+  }
+} */
