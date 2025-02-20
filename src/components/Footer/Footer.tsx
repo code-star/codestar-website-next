@@ -1,13 +1,6 @@
 import { FC } from "react";
 import styles from "./Footer.module.scss";
 import Image from "next/image";
-// import mastodonSvg from "../../public/mastodon_logo.svg";
-// import twitterSvg from "../../public/twitter_logo.svg";
-// import githubSvg from "../../public/github_logo.svg";
-// import mediumSvg from "../../public/medium_logo.svg";
-// import linkedinSvg from "../../public/linkedin_logo.svg";
-// import youtubeSvg from "../../public/youtube_logo.svg";
-// import meetupSvg from "../../public/meetup_logo.svg";
 
 const Footer: FC = () => {
   return (

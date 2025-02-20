@@ -1,13 +1,13 @@
-@import "../constants";
+@use "../constants" as c;
 
 .meetup-card {
   border-radius: 4px;
   padding: 1rem;
   width: 100%;
 
-  @media (min-width: $main-width) {
+  @media (min-width: c.$main-width) {
     padding: 0;
-    width: $aside-width;
+    width: c.$aside-width;
   }
 
   & > ul {
@@ -38,12 +38,12 @@
   p {
     font-size: 80%;
     margin-top: 2px;
-    color: $underline-text;
+    color: c.$underline-text;
   }
 
   > a {
     display: inline-block;
-    background-color: $orange;
+    background-color: c.$orange;
     border-radius: 4px;
     padding: 8px;
     font-weight: bold;
@@ -52,6 +52,6 @@
 }
 
 .meetup-card__highlight {
-  background-color: $highlight-card-bg;
+  background-color: c.$highlight-card-bg;
   padding: 1rem;
 }

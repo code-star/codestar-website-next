@@ -1,9 +1,9 @@
-@import "../constants";
+@use "../constants" as c;
 
 .embedded-social-media {
   display: none;
 
-  @media screen and (min-width: $main-width) {
+  @media screen and (min-width: c.$main-width) {
     display: flex;
     flex-direction: column;
     gap: 30px;

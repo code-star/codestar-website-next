@@ -1,4 +1,4 @@
-@import "../constants";
+@use "../constants" as c;
 
 .footer {
   background-color: var(--cs-brutalist-purple);
@@ -13,10 +13,10 @@
     padding: 0 1rem;
     width: 100%;
 
-    @media screen and (min-width: $main-width) {
+    @media screen and (min-width: c.$main-width) {
       padding: 0;
-      min-width: $main-min-width;
-      width: $main-width;
+      min-width: c.$main-min-width;
+      width: c.$main-width;
     }
 
     & :global(.contact-info) {

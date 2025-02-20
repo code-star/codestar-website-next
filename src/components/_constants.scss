@@ -1,6 +1,6 @@
-// TODO should be imported with @use instead of @import
+@use "sass:color";
 
-$highlight-card-bg: darken(#3266a3, 5%);
+$highlight-card-bg: color.adjust($color: #3266a3, $lightness: -5%);
 $orange: #e47e06;
 $red: #b03a48;
 $underline-text: var(--cs-white-grey); 
