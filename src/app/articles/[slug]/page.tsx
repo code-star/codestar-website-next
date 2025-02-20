@@ -1,18 +1,16 @@
 import dynamic from "next/dynamic";
 import { ArticleMetadata } from "../../../../mdx";
+import { getBlogPosts } from "@/lib/publications/getPublications";
 
-type ArticlePageProps = { params: { slug: string } };
+type ArticlePageProps = { params: Promise<{ slug: string }> };
 
-// https://didoesdigital.com/blog/nextjs-blog-02-add-mdx/
-// export async function generateStaticParams() {
-//   const blogPosts = ["first-mdx-post"]; // FIXME: Read from file system
-//   const blogStaticParams = blogPosts.map((post) => ({
-//     slug: post,
-//     metadata: metadata,
-//   }));
-
-//   return blogStaticParams;
-// }
+export async function generateStaticParams() {
+  const blogPosts = getBlogPosts().map((article) => article.id);
+  const blogStaticParams = blogPosts.map((post) => ({
+    slug: post,
+  }));
+  return blogStaticParams;
+}
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const resolvedParams = await params;

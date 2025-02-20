@@ -43,7 +43,7 @@ jobs:
           echo MASTODON_ACCESS_TOKEN=${{ secrets.MASTODON_ACCESS_TOKEN }} >> .env
           echo MASTODON_ID=${{ secrets.MASTODON_ID }} >> .env
           npm ci
-          npx next build && npx next export
+          npx next build
           touch out/.nojekyll
         # echo "{ \"basePath\": \"/codestar-website-next\" }" > config.json
         #     CI: false # true -> fails on warning

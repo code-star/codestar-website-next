@@ -58,7 +58,7 @@ const TootCard: FC<ITootCardProps> = ({ toots }) => {
               </span>
               <span title="Favourites">
                 <Image
-                  src="fa-star.svg"
+                  src="/fa-star.svg"
                   alt="Favourites"
                   width={18}
                   height={18}
