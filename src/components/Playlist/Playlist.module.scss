@@ -1,0 +1,18 @@
+@use "../constants" as c;
+
+.playlist {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 1rem;
+  width: 100%;
+
+  @media (min-width: c.$main-width) {
+    padding: 0;
+    width: c.$aside-width;
+  }
+
+  & p > a {
+    text-decoration: underline;
+  }
+}

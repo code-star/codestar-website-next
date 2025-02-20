@@ -1,0 +1,56 @@
+@use "../constants" as c;
+
+.toot-card {
+  display: none;
+  border: 1px solid c.$highlight-card-bg;
+  border-radius: c.$card-border-radius;
+  padding: 1rem;
+
+  > a {
+    display: block;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  p:first-child {
+    align-items: center;
+    color: c.$underline-text;
+    display: flex;
+    gap: 10px;
+  }
+
+  div > a {
+    display: block;
+    margin-bottom: 0.5rem;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @media (min-width: c.$main-width) {
+    display: block;
+    width: c.$aside-width;
+  }
+}
+
+.toot-card--badges {
+  display: flex;
+  gap: 0.7rem;
+  cursor: default;
+  align-items: flex-start;
+
+  > span {
+    display: flex;
+    gap: 0.3rem;
+    align-items: flex-start;
+    padding: 0.2rem;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: c.$highlight-card-bg;
+    }
+  }
+}

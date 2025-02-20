@@ -1,0 +1,14 @@
+.meetup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  h3 {
+    font-family: "Conduit ITC W04 Regular", 'system-ui';
+    font-size: 150%;
+  }
+
+  & :global(a.external) {
+    text-decoration: underline;
+  }
+}

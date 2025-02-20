@@ -1,0 +1,46 @@
+@use "../constants" as c;
+
+.top-bar {
+  background-color: #212121;
+  height: 56px;
+  border-bottom: 1px solid #343a71;
+  display: flex;
+  justify-content: center;
+  // width: 100%;
+
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    width: 100%;
+
+    & > a {
+      height: 40px;
+    }
+
+    @media screen and (min-width: c.$main-width) {
+      padding: 0;
+      min-width: c.$main-min-width;
+      width: c.$main-width;
+    }
+
+    & > ul {
+      list-style: none;
+      display: flex;
+      gap: 10px;
+    }
+
+    & li > a {
+      border-radius: 4px;
+      padding: 10px;
+      color: var(--cs-brutalist-creme);
+      font-family: "Conduit ITC W04 Regular", "system-ui";
+      font-size: 130%;
+
+      &:hover {
+        background-color: #222;
+      }
+    }
+  }
+}
