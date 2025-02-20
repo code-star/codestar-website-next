@@ -1,4 +1,4 @@
-@import "../constants";
+@use "../constants" as c;
 
 .welcome-card {
   width: 100%;
@@ -8,8 +8,8 @@
     text-decoration: underline;
   }
 
-  @media screen and (min-width: $main-width) {
-    min-width: calc($main-min-width - (2 * $aside-width));
-    width: calc($main-width - (2 * $aside-width) - 40px);
+  @media screen and (min-width: c.$main-width) {
+    min-width: calc(c.$main-min-width - (2 * c.$aside-width));
+    width: calc(c.$main-width - (2 * c.$aside-width) - 40px);
   }
 }

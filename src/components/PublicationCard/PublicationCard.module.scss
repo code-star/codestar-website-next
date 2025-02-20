@@ -1,4 +1,4 @@
-@import "../constants";
+@use "../constants" as c;
 
 .publication-card {
   border-radius: 4px;
@@ -15,10 +15,10 @@
     padding: 1rem;
   }
 
-  @media screen and (min-width: $main-width) {
+  @media screen and (min-width: c.$main-width) {
     & {
-      min-width: calc($main-min-width - (2 * $aside-width));
-      width: calc($main-width - (2 * $aside-width) - 40px);
+      min-width: calc(c.$main-min-width - (2 * c.$aside-width));
+      width: calc(c.$main-width - (2 * c.$aside-width) - 40px);
     }
   }
 
@@ -29,7 +29,7 @@
 }
 
 .publication-card--avatar {
-  background-color: $red;
+  background-color: c.$red;
   border-radius: 50%;
   color: black;
   height: 50px;
@@ -55,6 +55,6 @@
 }
 
 .publication-card--date {
-  color: $underline-text;
+  color: c.$underline-text;
   font-size: 80%;
 }

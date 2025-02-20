@@ -90,15 +90,7 @@ function parseFrontmatter(fileContent: string) {
 }
 
 function getMDXFiles(dir: string): string[] {
-  return fs
-    .readdirSync(dir)
-    .filter((entry) => fs.lstatSync(path.join(dir, entry)).isDirectory())
-    .flatMap((entry) => {
-      return fs
-        .readdirSync(path.join(dir, entry))
-        .filter((file) => path.extname(file) === ".mdx")
-        .map((file) => path.join(entry, file));
-    });
+  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx");
 }
 
 function readMDXFile(filePath: string) {
@@ -111,7 +103,7 @@ function getMDXData(dir: string) {
 
   return mdxFiles.map((file) => {
     const { metadata, content } = readMDXFile(path.join(dir, file));
-    const slug = file.slice(0, file.lastIndexOf("/"));
+    const slug = path.basename(file, path.extname(file));
 
     return {
       metadata,
@@ -123,7 +115,7 @@ function getMDXData(dir: string) {
 
 export const getBlogPosts = (): IPublication[] => {
   return getMDXData(
-    path.join(process.cwd(), "src", "app", "articles")
+    path.join(process.cwd(), "src", "articles")
   ).map<IPublication>((m) => ({
     id: m.slug,
     author: m.metadata.author,

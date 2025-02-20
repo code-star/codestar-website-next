@@ -4,7 +4,9 @@ import Head from "next/head";
 import { PropsWithChildren } from "react";
 import styles from "./layout.module.scss";
 
-export default function MdxLayout({ children }: PropsWithChildren) {
+export default function MdxLayout(props: PropsWithChildren) {
+  const { children } = props;
+
   return (
     <>
       <Head>

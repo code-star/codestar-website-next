@@ -1,9 +1,9 @@
-@import "../constants";
+@use "../constants" as c;
 
 .toot-card {
   display: none;
-  border: 1px solid $highlight-card-bg;
-  border-radius: $card-border-radius;
+  border: 1px solid c.$highlight-card-bg;
+  border-radius: c.$card-border-radius;
   padding: 1rem;
 
   > a {
@@ -14,7 +14,7 @@
 
   p:first-child {
     align-items: center;
-    color: $underline-text;
+    color: c.$underline-text;
     display: flex;
     gap: 10px;
   }
@@ -30,9 +30,9 @@
     }
   }
 
-  @media (min-width: $main-width) {
+  @media (min-width: c.$main-width) {
     display: block;
-    width: $aside-width;
+    width: c.$aside-width;
   }
 }
 
@@ -50,7 +50,7 @@
     border-radius: 4px;
 
     &:hover {
-      background-color: $highlight-card-bg;
+      background-color: c.$highlight-card-bg;
     }
   }
 }

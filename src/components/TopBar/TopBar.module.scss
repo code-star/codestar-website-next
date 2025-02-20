@@ -1,4 +1,4 @@
-@import "../constants";
+@use "../constants" as c;
 
 .top-bar {
   background-color: #212121;
@@ -19,10 +19,10 @@
       height: 40px;
     }
 
-    @media screen and (min-width: $main-width) {
+    @media screen and (min-width: c.$main-width) {
       padding: 0;
-      min-width: $main-min-width;
-      width: $main-width;
+      min-width: c.$main-min-width;
+      width: c.$main-width;
     }
 
     & > ul {

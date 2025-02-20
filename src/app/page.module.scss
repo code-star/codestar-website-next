@@ -1,10 +1,10 @@
-@import "../components/constants";
+@use "../components/constants" as c;
 
 .content {
   display: block;
   margin-top: 20px;
 
-  @media (min-width: $main-width) {
+  @media (min-width: c.$main-width) {
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -14,7 +14,7 @@
   :global(.viewport-xs) {
     display: inherit;
 
-    @media screen and (min-width: $main-width) {
+    @media screen and (min-width: c.$main-width) {
       display: none;
     }
   }
@@ -22,7 +22,7 @@
   :global(.viewport-sm) {
     display: none;
 
-    @media screen and (min-width: $main-width) {
+    @media screen and (min-width: c.$main-width) {
       display: inherit;
     }
   }

@@ -1,4 +1,4 @@
-@import "../constants";
+@use "../constants" as c;
 
 .playlist {
   display: flex;
@@ -7,9 +7,9 @@
   padding: 1rem;
   width: 100%;
 
-  @media (min-width: $main-width) {
+  @media (min-width: c.$main-width) {
     padding: 0;
-    width: $aside-width;
+    width: c.$aside-width;
   }
 
   & p > a {

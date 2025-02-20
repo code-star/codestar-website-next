@@ -1,7 +1,7 @@
-@import "../constants";
+@use "../constants" as c;
 
 .playlistitem-card {
-  background-color: $highlight-card-bg;
+  background-color: c.$highlight-card-bg;
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -28,6 +28,6 @@
   & > p {
     font-size: 80%;
     margin: 0 1rem 1rem 1rem;
-    color: $underline-text;
+    color: c.$underline-text;
   }
 }

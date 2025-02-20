@@ -1,16 +1,17 @@
-@import "../constants";
+@use "../constants" as c;
+@use "sass:color";
 
 .upcoming-meetup-card {
   display: block;
 
   section {
     border-radius: 4px;
-    background-color: $highlight-card-bg;
+    background-color: c.$highlight-card-bg;
     padding: 1rem;
     text-align: center;
 
     &:hover {
-      background-color: lighten($highlight-card-bg, 10%);
+      background-color: color.adjust($color: c.$highlight-card-bg, $lightness: 10%);
     }
   }
 
@@ -26,7 +27,7 @@
 
   section > p > button {
     display: inline-block;
-    background-color: $orange;
+    background-color: c.$orange;
     border-radius: 4px;
     border: none;
     padding: 8px;
@@ -34,11 +35,11 @@
     font-weight: bold;
     color: black;
     width: 100%;
-    max-width: $aside-width;
+    max-width: c.$aside-width;
     text-align: center;
     cursor: pointer;
 
-    @media (min-width: $main-width) {
+    @media (min-width: c.$main-width) {
       // width: $aside-width - 30px;
       max-width: auto;
       // width: 100%;
