@@ -1,0 +1,15 @@
+@use "../constants" as c;
+
+.welcome-card {
+  width: 100%;
+  padding: 0 1rem;
+
+  & :global(a) {
+    text-decoration: underline;
+  }
+
+  @media screen and (min-width: c.$main-width) {
+    min-width: calc(c.$main-min-width - (2 * c.$aside-width));
+    width: calc(c.$main-width - (2 * c.$aside-width) - 40px);
+  }
+}

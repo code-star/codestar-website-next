@@ -1,0 +1,57 @@
+@use "../constants" as c;
+
+.meetup-card {
+  border-radius: 4px;
+  padding: 1rem;
+  width: 100%;
+
+  @media (min-width: c.$main-width) {
+    padding: 0;
+    width: c.$aside-width;
+  }
+
+  & > ul {
+    list-style-type: none;
+    padding: 0;
+    
+    & > li > a:hover {
+      text-decoration: underline;
+    }
+
+    & > li {
+      overflow: hidden;
+
+
+      // &:hover h3 {
+      //   // color: blue;
+      //   text-shadow: 2px 2px 2px black;
+      // }
+    }
+  }
+
+  h3 {
+    // text-overflow: ellipsis;
+    // margin-bottom: 0;
+    margin: 0;
+  }
+
+  p {
+    font-size: 80%;
+    margin-top: 2px;
+    color: c.$underline-text;
+  }
+
+  > a {
+    display: inline-block;
+    background-color: c.$orange;
+    border-radius: 4px;
+    padding: 8px;
+    font-weight: bold;
+    color: black
+  }
+}
+
+.meetup-card__highlight {
+  background-color: c.$highlight-card-bg;
+  padding: 1rem;
+}
