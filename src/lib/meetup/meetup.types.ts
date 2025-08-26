@@ -9,4 +9,18 @@ export interface IMeetupEvent {
   };
 }
 
-export type MeetupResponse = Array<IMeetupEvent>;
+export type MeetupResponse = {
+  groupByUrlname: {
+    events: {
+      edges: Array<{
+        node: {
+          title: string;
+          id: string;
+          eventUrl: string;
+          dateTime: string;
+          description: string;
+        };
+      }>;
+    };
+  };
+}
