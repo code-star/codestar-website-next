@@ -1,0 +1,82 @@
+---
+title: "Using generative art to create a pulsating SVG star"
+original_url: "https://medium.com/codestar-blog/using-generative-art-to-create-a-pulsating-svg-star-cd7456268dc5"
+source: "medium"
+author: Hamza Haiken
+publishedAt: 2019-04-12
+---
+
+### Part 1 — Intro
+
+I recently created a new design for our recruitment campaign at Codestar. It represents a burning star, with [corona-like features](https://www.ucl.ac.uk/news/sites/news/files/corona-web.jpg), represented in an abstract way, aiming to make it feel like a pulsating stream of data (The original artist for the star is [Garry Killian](https://www.shutterstock.com/g/GarryKillian)).
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/568/1*lY5WPHYbCz_PDY-PaxTa0A.png" alt="We're very big on only hiring Latin speakers" width="800" />
+
+The rest of the team enjoyed it, and we nicknamed this design _"the code star"_. It was then suggested that we could try and recreate this as an animation for our website, or to simply just to generate as many different static stars as we want: a teammate's name could be used as a random seed, and they would be given their own special code star.
+
+In this series of blog posts, I will endeavor to explain my process in taking on this challenge, going through various subjects, in particular _generative art_ and _SVG animation._
+
+Our goal in this series will be to re-create the above visual in SVG, and animate it to make it slowly pulsate, like the sun’s corona.
+
+## What is generative art?
+
+The term [“generative art”](https://en.wikipedia.org/wiki/Generative_art) (or also “procedural art”) refers the making of art algorithmically, typically relying on fractals and randomness.
+
+Famous examples of this include: [that one album cover that everybody wears on a t-shirt](https://i.imgur.com/gV0cxPU.jpg), [Minecraft’s infinitely expanding worlds](https://i.imgur.com/smNksSJ.jpg), [No Man’s Sky’s universe and planets](https://www.rockpapershotgun.com/images/16/aug/nmsg8s.jpg), and many more.
+
+For further learning about getting started in generative art (after reading this of course!), I recommend as starting points [Generative Artistry](https://generativeartistry.com) and [The Coding Train](https://www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw) YouTube channel, which often takes on generative art challenges.
+
+## Noise
+
+One commonly used tool in the field of generative art is _noise_ — in particular, [Perlin](https://en.wikipedia.org/wiki/Perlin_noise), or [Simplex noise](https://en.wikipedia.org/wiki/Simplex_noise) (which is more suited for animations since it has a lower overhead). It is used for a variety of results: terrain, smoke, clouds, textures.
+
+This kind of noise is obtained by overlaying noise at different frequencies on top of each other, forming a cloud-like texture that expands infinitely in any direction. The nice thing about this method of constructing noise is that it can be expanded to support any number of required dimensions (in our case, a 3D space).
+
+In a nutshell, Perlin noise is constructed by averaging noise rendered at several scales (bilinear interpolation is used to smooth out the lower frequencies):
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/402/1*upB28P_sCBlqPhXgWO15Zw.png" alt="Image source: https://medium.com/100-days-of-algorithms/day-88-perlin-noise-96d23158a44c" width="800" />
+
+When averaging all of these (using some kind of weighted distribution), the following natural, cloudy texture is obtained:
+
+<img src="https://cdn-images-1.medium.com/fit/c/511/511/1*WHpL6IJd_gUROUmBUlXWnQ.png" alt="Could this image just be the cloud filter in Photoshop? Who knows" width="511" />
+
+Used creatively, this noise can be used to create impressive results, like this [wood texture](https://skybase.wordpress.com/2012/01/26/how-to-creating-super-simple-procedural-wood-textures-in-filter-forge/) for example (and again, given the nature of Perlin noise, this texture can expand seamlessly in any direction).
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/450/1*zlgGPvL70VCc9cOf5VFBsA.jpeg" alt="Sitting atop a mathematically generated hill is a big dream of mine" width="800" />
+
+[And here](https://i.redd.it/rq3ptj8i75b21.jpg) is an example from the game "No Man's Sky". The mountains in such a landscape are created using low-frequency noise (big features), the smaller hills on top of that come from the middle range of noise frequencies, and if you zoom in even closer the small dirt bumps are added on top of the hills by adding in the values of a higher frequency (this is like a fractal).
+
+## Using noise
+
+One of the big advantages of Perlin noise: by traveling along its plane, the intensity values increase and decrease **continuously**. This is not only very useful for terrain generation for creating hills and valleys, but also for _animation_, providing offsets that will smoothly increase or decrease randomly in a natural way.
+
+We will use [simplex-noise.js](https://github.com/jwagner/simplex-noise.js) for generating our noise. This is not Perlin but Simplex noise; it looks less detailed, and is faster to compute. The library provides a simple API: just instantiate a noise object with a [random seed](https://en.wikipedia.org/wiki/Random_seed), which you can then use for getting noise values in 2D, 3D or 4D:
+
+let simplex = new SimplexNoise("tutorial seed");
+let value = simplex.noise2D(0.42, 13.37);
+
+Precision can be as small as needed, effectively zooming in on the noise, and the whole 2D plane that can be represented with JavaScript numbers is available to us.
+
+Here is a simple demo on how to use Simplex noise. Feel free to play around with the sliders, particularly with the z-axis (slowly).
+
+[Embedded media omitted]
+✍︎Try moving in the X and Y directions, then slowly scroll the Z slider
+
+Moving along the X- and Y-axes feels natural to us humans — it just looks like standard translation — but it shows us that the noise is indeed continuous.
+
+Moving along the Z-axis, however, gives a totally different feeling, exposing the vertical continuity of the noise by showing us slices of what seems to be an animation.
+
+The color values at a given pixel coordinates change continuously and smoothly while navigating along the Z direction.
+
+This is a big clue; by using the Z-axis to represent time, we can now animate things.
+
+But before we can animate, we will first need a drawing!
+
+## Coming up in this series
+
+Stick around on the Codestar blog to catch the next parts in this series:
+
+*   Drawing the basis for the SVG star: basic [Snap.svg](http://snapsvg.io/) tutorial
+*   Mapping star element coordinates using the Simplex noise as a displacement map: some trigonometry and calculus
+*   Animation: bringing everything together, and using [Tweakpane](https://cocopon.github.io/tweakpane) for playing around with the settings
+*   Making a tool for outputting static SVG images using a string seed for generating a random star

@@ -1,0 +1,370 @@
+---
+title: "Leibniz equality in TypeScript"
+original_url: "https://medium.com/codestar-blog/leibniz-equality-in-typescript-2aeff1303749"
+source: "medium"
+author: Werner de Groot
+publishedAt: 2019-04-03
+---
+
+In this post I’ll explain how you can use Leibniz equality to safely type your higher-order components in React, although it can be used in many other places (outside the React ecosystem) too.
+
+## Introduction
+
+At the client I’m currently working for we use a lot of different charts to visualize processes over time. We have line charts, Gantt charts, you name it. Each of those charts features buttons which allows users to zoom in or out.
+
+I’d like to use a simplified version of one of those graphs to explain what Leibniz, a German mathematician who lived well over 300 years ago, has to do with TypeScript.
+
+## Motivating example
+
+Let's suppose our graph looks a bit like this:
+
+<img src="https://cdn-images-1.medium.com/fit/c/494/274/1*iBVlr8lOKvIzbqA8-qvHoQ.gif" alt="" width="494" />
+
+I use a component `Graph` which takes the following props:
+
+`[GraphProps.ts](https://gist.github.com/wernerdegroot-blogs/233ddd104b1e58f14382de69080c7f9f#file-GraphProps-ts)`
+
+```
+type GraphProps = {
+  activities: Activity[]
+  dayStart: number
+  dayEnd: number
+  onZoomIn: () => void
+  onZoomOut: () => void
+}
+```
+
+What do we need to show a graph? We need:
+
+*   `activities` to show;
+*   `dayStart` and `dayEnd`, which specify the range of the time axis;
+*   `onZoomIn` and `onZoomOut` to control the range of the time axis from inside the component.
+
+## Zooming in and out
+
+In this aside, I’d like to show you the function that handles zooming in or out. It’s not really relevant to the rest of the story (and you can skip this if you like) but it might come in handy if you wish to code along with this blog post.
+
+`[zoom.ts](https://gist.github.com/wernerdegroot-blogs/ba3ebc50d0c63c54bd89d6672b7edaa7#file-zoom-ts)`
+
+```
+function zoom(dayStart: number, dayEnd: number, zoomFactor: number): [number, number] {
+  // What is the middle of the time range?
+  // When zooming in or out, the middle of the time range should stay the middle.
+  const dayMiddle = (dayEnd + dayStart) / 2
+ 
+  // Determine what the new time range should be using the `zoomFactor`.
+  const oldTimeRange = dayEnd - dayStart
+  const newTimeRange = oldTimeRange * zoomFactor
+ 
+  // Calculate the new boundaries of the time range:
+  const newDayStart = dayMiddle - newTimeRange / 2
+  const newDayEnd = dayMiddle + newTimeRange / 2
+  
+  return [newDayStart, newDayEnd]
+}
+```
+
+## Higher-order component
+
+Although it is tempting to let this component manage its own `dayStart` and `dayEnd` (especially now that we can use hooks), it has two benefits to manage that state externally:
+
+*   I can easily expose the component to different states, which makes it easy to test;
+*   I can change that state from the outside if I need to (for instance to ensure that all visible charts share the same time axis).
+
+If I would create a higher-order component (HOC) to manage that state for me, I would get the best of both worlds. I get an easy to use component which manages its own state if I wrap `Graph` in this HOC, but I get a lot of power if I choose not to.
+
+Furthermore, I can apply this HOC to many other components which have a time axis and support some form of zooming in and out.
+
+What should this HOC look like? What is the input? And what is the output?
+
+*   The component that we pass to the HOC (the “inner component”) should have some props provided automatically by the component that the HOC produces (the “outer component”).
+*   The outer component should forward any other props to the inner component. Those are the only props that we need to provide to the outer component.
+*   TypeScript should be able to infer all of this automatically.
+
+The HOC we will write will provide the following props to the inner component (which we’ll call `Inner` in what follows):
+
+`[leibniz-03-TimeAxisProps.ts](https://gist.github.com/wernerdegroot-blogs/d2ab9d1b04b4170309dd81b5b85db6c5#file-leibniz-03-TimeAxisProps-ts)`
+
+```
+type TimeAxisProps = {
+  dayStart: number
+  dayEnd: number
+  onZoomIn: () => void
+  onZoomOut: () => void
+}
+```
+
+It will produce a component (which we’ll call `Outer` from now on) that takes the following props¹:
+
+`[leibniz-04-OuterProps.ts](https://gist.github.com/wernerdegroot-blogs/f8dc13b757ddbba78bcd5d01d14e8c1a#file-leibniz-04-OuterProps-ts)`
+
+```
+type OuterProps<InnerProps> = Omit<InnerProps, keyof TimeAxisProps>
+```
+
+This might be a bit intimidating. What this says is that we can determine the props to the outer component (`OuterProps`) from the props to the inner component (`InnerProps`) by removing all values that are shared with `TimeAxisProps` (`dayStart`, `dayEnd`, `onZoomIn` and `onZoomOut` to be precise)².
+
+Now that we know what the HOC should do, we can focus on _how_ it should do it:
+
+`[leibniz-05-WithTimeAxis.tsx](https://gist.github.com/wernerdegroot-blogs/5a37a833eed02e85f937572087bd09fc#file-leibniz-05-WithTimeAxis-tsx)`
+
+```
+// The state that we want to manage for `Inner`:
+type OuterState = {
+  dayStart: number
+  dayEnd: number
+}
+
+function WithTimeAxis<InnerProps extends TimeAxisProps>(Inner: React.ComponentType<InnerProps>) {
+  return class Outer extends React.Component<OuterProps<InnerProps>, OuterState> {
+    constructor(props: OuterProps<InnerProps>) {
+      super(props)
+      
+      // Choose a sensible default state:
+      this.state = {
+        dayStart: 0,
+        dayEnd: 10
+      }
+    }
+    
+    public render() {
+      // Construct `TimeAxisProps`.
+      const timeAxisProps: TimeAxisProps = {
+        dayStart: this.state.dayStart,
+        dayEnd: this.state.dayEnd,
+        onZoomIn: this.handleZoomIn,
+        onZoomOut: this.handleZoomOut
+      }
+      
+      // Combine `OuterProps` and `TimeAxisProps` 
+      // to get `InnerProps`.
+      const innerProps: InnerProps = {
+        ...this.props,
+        ...timeAxisProps
+      }
+     
+      // Render...
+      return <Inner {...innerProps} />
+    }
+    
+    private handleZoomOut = () => {
+     const [newDayStart, newDayEnd] = zoom(
+        this.state.dayStart,
+        this.state.dayEnd,
+        2 // Make the time range twice as big
+      )
+      this.setState({ dayStart: newDayStart, dayEnd: newDayEnd })
+    }
+    
+    private handleZoomIn = () => {
+      const [newDayStart, newDayEnd] = zoom(
+        this.state.dayStart,
+        this.state.dayEnd,
+        0.5 // Make the time range half as big (twice as small)
+      )
+      this.setState({ dayStart: newDayStart, dayEnd: newDayEnd })
+    }
+  }
+}
+```
+
+That’s a big piece of code! We can see how to handle zooming in and zooming out. We can also see how we can combine both the `OuterProps` and the `TimeAxisProps` to render the `Inner`\-component. You might also have noticed that `InnerProps extends TimeAxisProps`. Constraining our generic type parameter it this way ensures that we can only apply this HOC on components that have at least the props `dayStart`, `dayEnd`, `onZoomIn` and `onZoomOut` that we’d like to provide to it. If that component doesn’t have these four props, why even apply `WithTimeAxis`, right?
+
+## Trouble
+
+There is, however, a tiny problem… It doesn't compile!
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/393/1*6mEccGy9WNOJ5zU_8a35DA.png" alt="" width="800" />
+
+But why doesn't it? TypeScript has trouble figuring out that the combination of `OuterProps<InnerProps>` and `TimeAxisProps` is equal to `InnerProps`. Although this is true for the case with `GraphProps`, it isn't true in general.
+
+To give you an example in which this isn’t true, let’s suppose that we try to apply the HOC to a component `CounterExample` with the following props:
+
+`[leibniz-06-CounterExampleProps.ts](https://gist.github.com/wernerdegroot-blogs/17879a042e2df6fbf7be765fb07fc6b8#file-leibniz-06-CounterExampleProps-ts)`
+
+```
+type CounterExampleProps = {
+  activities: Activity[]
+  dayStart: 0 // Can only start at zero!
+  dayEnd: number
+  onZoomIn: () => void
+  onZoomOut: () => void
+}
+```
+
+where I’d like to point your attention to the `dayStart: 0`.
+
+I admit, this is a bit farfetched, but it does illustrate the point. We shouldn’t apply `WithTimeAxis` to `CounterExample` as the HOC might provide a `dayStart` that is not equal to zero. In fact, changing the zoom level multiple times ensures that `dayStart` will eventually be non-zero, even if it was equal to zero initially.
+
+The TypeScript isn’t complaining about this when we do try to apply `WithTimeAxis` to `CounterExample`, as `CounterExampleProps` nicely extends `TimeAxisProps` as I required. `CounterExampleProps` is more specific than `TimeAxisProps` (because the type `0` is more specific than `number`) but that is allowed for subtypes. Instead, the compiler has noticed this possibility even before we did, and that is why our HOC doesn’t compile!
+
+The root of our issues is with the `InnerProps extends TimeAxisProps` constraint. What we try to express is that all properties of `TimeAxisProps` are shared with `InnerProps` without allowing for subtypes. Unfortunately `extends` is currently the best we can do. In fact, it’s the only type of constraint we can express on our generic type parameters in TypeScript.
+
+## Hope on the horizon
+
+We can solve this problem by pushing the burden of proof up a level. We ask the user for a function `convert` that is able to convert the combination of `OuterProps<InnerProps>` and `TimeAxisProps` (which can be expressed in TypeScript as `OuterProps<InnerProps> & TimeAxisProps`) to `InnerProps`. If the user can do that, we can call `Inner` with the right props:
+
+`[leibniz-07-WithTimeAxis.tsx](https://gist.github.com/wernerdegroot-blogs/b0ce2eb9479c9d548b4ce3495bb211a5#file-leibniz-07-WithTimeAxis-tsx)`
+
+```
+function WithTimeAxis<InnerProps extends TimeAxisProps>(
+  Inner: React.ComponentType<InnerProps>,
+  convert: (p: OuterProps<InnerProps> & TimeAxisProps) => InnerProps
+) {
+  return class Outer extends React.Component<OuterProps<InnerProps>, OuterState> {
+    
+    ...
+    
+    public render() {
+     
+      ...
+      
+      // Combine `OuterProps` and `TimeAxisProps` 
+      // to get `InnerProps`.
+      const innerProps: InnerProps = convert({
+        ...this.props,
+        ...timeAxisProps
+      })
+     
+      // Render...
+      return <Inner {...innerProps} />
+    }
+    
+    ...
+    
+  }
+}
+```
+
+What does this conversion function look like in the example of `GraphProps`? It’s not very difficult at all! In the example of `GraphProps` we can see that:
+
+*   The parameter type is `Omit<GraphProps, keyof TimeAxisProps> & TimeAxisProps`, which the compiler knows is just a fancy way to write `GraphProps`;
+*   The return type is `GraphProps`.
+
+What it boils down to is that we are asked to provide a function that makes this very trivial conversion:
+
+`[leibniz-08-trivial.ts](https://gist.github.com/wernerdegroot-blogs/9e53339b4ed8a0485174812ddea9823e#file-leibniz-08-trivial-ts)`
+
+```
+function trivial(graphProps: GraphProps): GraphProps {
+  return graphProps
+}
+
+const GraphWithTimeAxis = WithTimeAxis(Graph, trivial)
+```
+
+We can even use the identity function if we’d like:
+
+`[leibniz-09-identity.ts](https://gist.github.com/wernerdegroot-blogs/0c0d992f20045903fc0e50233d7f64dc#file-leibniz-09-identity-ts)`
+
+```
+function identity<T>(t: T): T {
+  return t
+}
+
+const GraphWithTimeAxis = WithTimeAxis(Graph, identity)
+```
+
+For `CounterExample` we are asked to provide a conversion function that takes an object with `dayStart: number` to `dayStart: 0`. We could simply provide a conversion function that maps every `dayStart` (whether it is 1, 2, 99 or something else) to 0 but that would clearly not be in the spirit of `WithTimeAxis`. If I would instead try to use something `identity` in this case, TypeScript would complain.
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/235/1*g_5XkBVLaWIkvs7W_XHv8g.png" alt="" width="800" />
+
+which is a rather nice way of hearing about this compilation error I think. (Especially the note at the bottom that says "Type 'number' is not assignable to type '0'" points you in the right direction immediately.)
+
+As we’ve concluded earlier, `OuterProps<CounterExampleProps> & TimeAxisProps` is not equal to `CounterExampleProps`, and the compiler can tell you that. If you cannot use something like `identity` or `trivial`, that means you probably shouldn’t use this HOC.
+
+This is really the crucial step of this blog, so take some time to digest this. We’ve pushed the burden of proving that `OuterProps<InnerProps> & TimeAxisProps` to `InnerProps` from `Outer` (where that’s hard or even impossible to do) to the consumers of this component (where that is easy or even trivial to do). We can’t prove this in general, but we can do it case-by-case every time we apply `WithTimeAxis`.
+
+## Leibnizian equality
+
+A famous mathematician called Leibniz described a form of equality in which two things (_a_ and _b_) can be considered to be equal if every predicate that holds for _a_ also holds for _b_ (and vice versa).
+
+In TypeScript, we can express this as
+
+`[leibniz-10-Leibniz.ts](https://gist.github.com/wernerdegroot-blogs/9e26e278c02c700af1845d37632fc28b#file-leibniz-10-Leibniz-ts)`
+
+```
+type Leibniz<A, B> = ((a: A) => B) & ((b: B) => A)
+```
+
+Two types `A` and `B` are equal if every function that maps `A` to `B` is also a mapping from `B` to `A`. You can see that it’s only possible to construct such a function if `A` is equal to `B`. In that case `Leibniz<A, B>` collapses to `type Leibniz<A, A> = (a: A) => A` (in other words, it is our `identity` function).
+
+`Leibniz` is a formalization of the technique we used in the previous section with a HOC:
+
+`[leibniz-11-WithTimeAxis.tsx](https://gist.github.com/wernerdegroot-blogs/c584c3e77ed95b7fc5c3bcf39f4460ee#file-leibniz-11-WithTimeAxis-tsx)`
+
+```
+function WithTimeAxis<InnerProps extends TimeAxisProps>(
+  Inner: React.ComponentType<InnerProps>,
+  leibniz: Leibniz<OuterProps<InnerProps> & TimeAxisProps, InnerProps>
+) {
+  return class Outer extends React.Component<OuterProps<InnerProps>, OuterState> {
+    
+    ...
+    
+    public render() {
+     
+      ...
+      
+      // Combine `OuterProps` and `TimeAxisProps` 
+      // to get `InnerProps`.
+      const innerProps: InnerProps = leibniz({
+        ...this.props,
+        ...timeAxisProps
+      })
+     
+      // Render...
+      return <Inner {...innerProps} />
+    }
+    
+    ...
+    
+  }
+}
+```
+
+By requiring a `Leibniz<OuterProps<InnerProps> & TimeAxisProps, InnerProps>` this function expresses that it can only do its job if `OuterProps<InnerProps> & TimeAxisProps` and `InnerProps` are equal.
+
+Because `Leibniz<...>` serves as our type constraint, we can even drop the `extends` from `InnerProps extends TimeAxisProps`. This is no real loss as that `extends` wasn’t doing a very good job anyways.
+
+## Conclusion
+
+Sometimes we need something stricter than `extends`, or we’d like to constrict the type parameter in the other direction (`number extends T` instead of `T extends number`). In those cases `Leibniz<...>` can be your friend. In my experience using a `Leibniz<...>` improves the readability of your type constraints when those constraints get more complicated (or include three or more different types).
+
+## Afterthoughts
+
+This technique was first used in [Typing Dynamic Typing (Baars and Swierstra, ICFP 2002)](http://portal.acm.org/citation.cfm?id=583852.581494) but I haven’t seen it used in TypeScript anywhere yet. I’m really interested to hear how you would tackle the problem addressed in this post without using a `Leibniz<...>` or if you’ve seen it used in similar (or different!) places. Let me know!
+
+\[1\]: `Omit` will be introduced in TypeScript 3.5. In the meantime, you can define it yourself as `type Omit<O, K extends keyof O> = Pick<O, Exclude<keyof O, K>>` .
+
+\[2\]: We’ve defined `OuterProps` in terms of `InnerProps`. Like in mathematics, where you can express _y_ in terms of _x_ (_y_ = 2_x_) or _x_ in terms of _y_ (_x_ = _y_ / 2), TypeScript allows me to reverse this relationship. We get
+
+`[leibniz-12-InnerProps.ts](https://gist.github.com/wernerdegroot-blogs/260c0917f0f805fb3406f8dbff051cbe#file-leibniz-12-InnerProps-ts)`
+
+```
+type InnerProps<OuterProps> = OuterProps & TimeAxisProps
+```
+
+No need for complicated tricks like `Omit<...>`. Unfortunately, this doesn’t work. Because we start out with an `Inner`\-component, from which we generate an `Outer`\-component, we should start out with an `InnerProps`, from which we derive the `OuterProps`. If we would reverse this relationship by writing
+
+`[leibniz-13-WithTimeAxis.tsx](https://gist.github.com/wernerdegroot-blogs/21a456a053cec1f303a5f6f2a4a26506#file-leibniz-13-WithTimeAxis-tsx)`
+
+```
+type InnerProps<OuterProps> = OuterProps & TimeAxisProps
+
+function WithTimeAxis<OuterProps>(Inner: React.ComponentType<InnerProps<OuterProps>>) {
+  return class Outer extends React.Component<OuterProps, OuterState> {
+
+    ...
+
+  }
+}
+```
+
+we'd lose the ability for TypeScript to correctly infer the right types:
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/93/1*JmOikDAspLJuHPY07W1-Lw.png" alt="" width="800" />
+
+In our example, the compiler would infer `OuterProps` to be equal to `GraphProps`, which includes `dayStart`, `dayEnd`, `onZoomIn` and `onZoomOut` so when you try to use the resulting component you are still asked to provide those props (even though they will by overwritten by the ones the HOC provides).
+
+If you don’t mind helping the compiler a hand by providing the type yourself (instead of letting TypeScript infer it) then this is a very nice way of writing HOC’s and you needn’t read the rest of the blog.

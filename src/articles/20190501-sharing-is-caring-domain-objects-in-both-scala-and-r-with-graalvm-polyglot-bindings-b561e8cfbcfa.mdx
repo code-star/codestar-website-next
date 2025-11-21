@@ -1,0 +1,342 @@
+---
+title: "Sharing is Caring! Domain objects in BOTH Scala and R with GraalVM Polyglot bindings."
+original_url: "https://medium.com/codestar-blog/sharing-is-caring-domain-objects-in-both-scala-and-r-with-graalvm-polyglot-bindings-b561e8cfbcfa"
+source: "medium"
+author: Nathan Perdijk
+publishedAt: 2019-05-01
+---
+
+**In any domain that goes beyond a sample project, it becomes almost inevitable that you want to use objects that accurately represent that domain. GraalVM does an adequate job of converting datastructures from R to JVM languages and back by using sensible defaults, but what do you do when the sensible defaults are not sufficient? Given that GraalVM can perform translation between its multitude of supported languages, is it possible to define a “Domain” that can be accessed by all?**
+
+**This is, of course, a rhetorical question and the answer is "Yes".**
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/600/1*LPCG2xlLiUdqcYJulzxvmw.png" alt="" width="800" />
+
+In this article I'll demonstrate how to share domain objects between JVM languages and guest languages on the GraalVM platform. I'm using Scala domain objects (because Scala is awesome), but you could do the same with, for instance, Java or Kotlin.
+
+(If you’re new to GraalVM Polyglot abilities, consider also reading my previous article on the subject: [using GraalVM to execute R files from Scala](https://medium.com/codestar-blog/in-search-of-the-holy-graalvm-putting-the-r-in-scala-or-java-or-b057494f77).)
+
+## The Problem
+
+To demonstrate the problem we are trying to solve, we first need a pretend domain. Let’s do something with Weather Forecasts, because people always talk about the weather!
+
+Creating weather forecasts is the kind of terribly complicated modelling business that could be built in R, but luckily we don’t actually _need_ a working model for this article. So let’s just pretend we already have this awesome R functionality that creates weather forecasts, cleanly abstracted away in a separate file called `fun_MagicHappensHere.R`:
+
+`[fun_MagicHappensHere.R](https://gist.github.com/NRBPerdijk/4a115fe9e58ba6885f177bf3dd6b7f72#file-fun_MagicHappensHere-R)`
+
+```
+# Some very impressive R stuff happens here. 
+# (Well, we're pretending it does, anyway! It's really just a mock...)
+# This function returns a data.frame containing a number of 
+# weather forecasts that we need to bring back to the JVM
+magicHappensHere <- function() {
+    # Omitting mocking code here
+    (...)
+    
+    # Like in Scala, the result of the last statement in an R function is its return.
+    weatherForecasts
+}
+```
+
+When brought into scope with R’s`source` the above file will yield a `magicHappensHere` function that can be called and returns a `data.frame` with some weather forecast information. We can then return the result to Scala by simply making it the return of our R function:
+
+`[fun_NoBindingsWeatherForecasts.R](https://gist.github.com/NRBPerdijk/01f617dfdcbed15713aec8b71c2758df#file-fun_NoBindingsWeatherForecasts-R)`
+
+```
+generateWeatherForecasts <- function(pathToMagicFile) {
+
+  # We're bringing the function contained in the file at the given location into scope
+  source(paste(pathToMagicFile))
+
+  # This returns a dataframe, a way for R to store large quantities of data
+  # in an ordered manner (kind of like a Database Table...)
+  weatherForecast <- magicHappensHere()
+
+  # Like in Scala, the result of the last statement in an R function is its return.
+  weatherForecast
+}
+```
+
+Wow, that doesn’t look too bad! This won’t get many complaints from the Data Scientist, I reckon.
+
+> So, what’s wrong with this? What’s the problem?
+
+I’m glad you asked, [interlocutor](https://www.dictionary.com/browse/interlocutor)! Let’s take a look on the Scala/JVM side of this equation, to see what the Data Engineer has to deal with:
+
+`[Main.scala](https://gist.github.com/NRBPerdijk/178b2c01420db29de4863f4bf94e0178#file-Main-scala)`
+
+```
+  // We need to initialise a GraalContext that will do the mediation between
+  // the JVM languages and R
+  val context: Context = Context.newBuilder("R").allowAllAccess(true).build()
+
+  // Next, we need to create a Source which needs to know what language it features
+  // and where to find the code.
+  val sourceNoBindings: Source = 
+    Source
+      .newBuilder("R", Main.getClass.getResource("fun_NoBindingsWeatherForecasts.R"))
+      .build()
+
+  /*
+   * We use the graal context to convert the source into a function.
+   * Because R is dynamically typed, the compiler cannot help you here:
+   * it trusts that you give it correct instructions!
+   * This also means that you may ( => DEFINITELY) want to wrap any call
+   * to this function in a Try to prevent explosions!
+   *
+   * We need to tell our compiler what kind of function this new Source represents.
+   * In this case it is a function that takes one argument:
+   *   - a path to another R function (which mocks the magic that R is good at)
+   * And it returns... something rather complex: a Map of Strings, that refer to Lists
+   * that contain... something we can't usefully Type because it will actually be
+   * different things!
+   */
+  val rNoBindingsWeatherForecasts: String => util.Map[String, util.ArrayList[_]] =
+    context.eval(sourceNoBindings).as(classOf[String => util.Map[String, util.ArrayList[_]]])
+```
+
+Whoa… creating the Graal Context and Source is trivial, but look at the nasty type signature on that call to R! Let’s pick it apart for a bit:
+
+*   A `Map` that contains `List`s of each `data.frame` row keyed by its name… That makes sense, well done Graal! It’s just too bad it’s Stringly typed, rather than actual methods on an actual class, so any typo will mess us up at runtime.
+*   Unknown content type of the Lists?… That’s unfortunate, we know that some rows should only contain `String`, while others contain `Int` but this information is lost in conversion… We have to do a bunch of casting!
+*   The returned Collections are Java? That’s just sad! The polyglot representation of collections doesn’t transfer to Scala, but Scala `Map` and `List` are much more powerful than their Java equivalent, so we’ll have to convert the Java equivalents!
+*   Every element of each `List` doesn’t actually belong to the rest of the `List`, but instead should be combined with each corresponding position in every other `List` to actually make a `WeatherReport`… (The first entry of “humidities”, should be paired with the first entry of “temperatures” etc.)
+
+Let’s see what this means when we try to use the output of this function:
+
+`[Main.scala](https://gist.github.com/NRBPerdijk/9e36ef4ba3fd89f633b49b55c2c9c745#file-Main-scala)`
+
+```
+  private val path = Main.getClass.getResource("fun_MagicHappensHere.R").getPath
+  Try(rNoBindingsWeatherForecasts(path)) match {
+    case Failure(f) => print(f)
+    case Success(s) =>
+      // turning the Java Map into an immutable Scala Map, same for the Java List.
+      val resultAsScala: Map[String, List[_]] =
+        s.asScala.toMap.map(entry => entry._1 -> entry._2.asScala.toList)
+      
+      // We need to do a bunch of nasty casting, because the returntype is not uniform
+      val humidities: List[Int] = resultAsScala("humidity").asInstanceOf[List[Int]]
+      val temperatures: List[Int] = resultAsScala("temperature").asInstanceOf[List[Int]]
+      val temperatureScale: List[String] = 
+        resultAsScala("temperatureScale").asInstanceOf[List[String]]
+      /*
+       * We are omitting a bunch of things here:
+       *   - there are more return values that need to be extracted from the map
+       *     (which won't tell us if we're being exhaustive or not)
+       *   - these return values need to be fit inside proper domain objects for further
+       *     typesafe treatment, so we'll need to stitch elements from each list
+       *     together...
+       *
+       * But already, we can see that this is:
+       *   - very verbose
+       *   - very error prone (it takes a lot of trial and error to get it right)
+       *   - very brittle (it is very easy for a change somewhere else to break this
+       *     parsing in half)
+       *   - annoying to do!
+       * If something is wrong (say, a column is missing), we get errors when parsing,
+       * NOT where the actual mistake is made!
+       */
+    }
+```
+
+I don’t know about you, but I’d feel quite uncomfortable at the thought of maintaining the code above. It’s verbose, error prone, brittle, annoying and it fails at the wrong spot if any mistakes are introduced (namely at the place of conversion, rather than the place of programming error). I wish the R function would just return a `Set` of `WeatherForecast`!
+
+Whoops, hold on… Wait a minute…
+
+Why don’t we just _**make it do that?**_
+
+## **The Solution: Bindings**
+
+GraalVM comes with an option that makes it possible to explicitly share instances of code across the language divide. It makes it possible to add symbols to bindings that are accessible to other languages. The Graal Context has two functions that can be used to do this in a very similar way:
+
+*   [`getPolyglotBindings()`](https://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/Context.html#getPolyglotBindings--)
+*   [`getBindings(“nameOfLanguage")`](https://www.graalvm.org/sdk/javadoc/org/graalvm/polyglot/Context.html#getBindings-java.lang.String-)
+
+In this article I will be using `getBindings`, because it doesn’t require an explicit import on the side of the using language and it allows you to limit which languages you are exposing each binding to. Using `getPolyglotBindings()` is almost identical from a coding perspective though, so pick the one you like best.
+
+### Using Domain objects on both sides of the language divide
+
+This is what our Domain object looks like:
+
+`[Domain.scala](https://gist.github.com/NRBPerdijk/4c64c4966621cbd6567b39e15208bc47#file-Domain-scala)`
+
+```
+ /*
+  * Our Domain object functions as a factory for our domain-related classes.
+  * It has methods that create new instances of these classes, which can then safely be used from another Context.
+  */
+class Domain {
+  def weatherForecastList(): WeatherForecastList = WeatherForecastList(List())
+  def percentage(percent: Int): Percentage = Percentage(percent: Double)
+  def chanceOfRain(chance: Percentage): ChanceOfRain = ChanceOfRain(chance: Percentage)
+ 
+  def temperature(degrees: Int, temperatureScale: String): Temperature =
+    Temperature(degrees: Int, temperatureScale: String)
+ 
+  def windSpeed(scale: String, speed: Int): WindSpeed =
+    WindSpeed(scale: String, speed: Int)
+ 
+  def windForecast(windSpeed: WindSpeed, direction: String): WindForecast =
+    WindForecast(windSpeed: WindSpeed, direction: String)
+ 
+  def weatherForecast(
+    humidity: Percentage,
+    windForecast: WindForecast,
+    sunshine: Percentage,
+    temperature: Temperature,
+    chanceOfRain: ChanceOfRain): WeatherForecast =
+      WeatherForecast(humidity, windForecast, sunshine, temperature, chanceOfRain)
+}
+```
+
+`Domain` is basically a factory that can be used to spawn new instances of all the domain classes that we want to share. The class`Domain` itself is immutable! (As it happens, the spawned instances are too.)
+
+> **WARNING**: You probably don’t want to put a mutable object into bindings. If you do, this object can be mutated **from any language that can reach it**. Just as you don’t want multiple threads to tangle with the same mutable object, you don’t want multiple languages to access the same mutable state! (Really! Imagine having to debug race conditions across language boundaries...)
+
+Any instance of the `Domain` class provides methods to spawn new instances of the following domain case classes:
+
+`[WeatherForecast.scala](https://gist.github.com/NRBPerdijk/eae681fac5c1e060f48d5521c7743d01#file-WeatherForecast-scala)`
+
+```
+case class WeatherForecast(
+  humidity: Percentage,
+  windForecast: WindForecast,
+  sunshine: Percentage,
+  temperature: Temperature,
+  chanceOfRain: ChanceOfRain
+)
+case class Temperature(degrees: Int, temperatureScale: String)
+case class Percentage(percent: Double)
+case class WindForecast(windSpeed: WindSpeed, direction: String)
+case class WindSpeed(scale: String, speed: Int)
+case class ChanceOfRain(chance: Percentage)
+case class WeatherForecastList(asScalaList: List[WeatherForecast]) {
+  def add(weatherForecast: WeatherForecast): WeatherForecastList =
+    this.copy(weatherForecast :: asScalaList)
+}
+```
+
+Let’s put an instance of our `Domain` class into the bindings for R, so it can be accessed from the R guest language context:
+
+`[Main.scala](https://gist.github.com/NRBPerdijk/badcd84759c7bf7154c3303d56cf19c0#file-Main-scala)`
+
+```
+/*
+   * Exposing bindings is an interesting way to share functionality between languages.
+   * This command makes an instance of the Domain class available under the "Domain"
+   * accessor.
+   */
+  context.getBindings("R").putMember("Domain", new Domain)
+  
+```
+
+Easy peasy. From R, the new object will simply be known as `Domain` and its methods will be accessible like this: `Domain$methodName(arguments)`
+
+We turn a new R file, that uses this binding, into our newest `Source`:
+
+`[Main.scala](https://gist.github.com/NRBPerdijk/72f9552fe0267d5fac9581d5b4e81470#file-Main-scala)`
+
+```
+  // This source will use the provided Domain instance to create objects as they have been
+  // defined in the Scala domain.
+  val sourceWithBindings: Source = 
+    Source
+      .newBuilder("R", Main.getClass.getResource("fun_WithBindingsWeatherForecasts.R"))
+      .build()
+```
+
+And then we define the function:
+
+`[Main.scala](https://gist.github.com/NRBPerdijk/c093d7d313727e2f527fc8891f569f59#file-Main-scala)`
+
+```
+  // This function signature is a lot cleaner than the one that doesn't use bindings.
+  // It is also completely Scala, meaning we do not have to do ANY parsing.
+  val rMagicWithBindings: String => WeatherForecastList =
+    context.eval(sourceWithBindings).as(classOf[String => WeatherForecastList])
+```
+
+Now that this is our return type, all we need to do to work with the returned `WeatherForecast`s is this:
+
+`[Main.scala](https://gist.github.com/NRBPerdijk/446b9d3ba6c1ee37ebac2b88ef8a719d#file-Main-scala)`
+
+```
+// Remember to always put a call to R in a Try block, because
+// R often resorts to throwing RuntimeExceptions.
+  Try(rMagicWithBindings(path)) match {
+    case Failure(f) => print(f)
+    case Success(weatherForecastList) =>
+      // We get back a WeatherForecastList, which is a wrapper for List[WeatherForecast].
+      // Now we can work with the results WITHOUT any parsing:
+      // simply take out the List and do your operations (here we print them one by one).
+      weatherForecastList.asScalaList.foreach(forecast => println(forecast))
+  }
+```
+
+That is one very happy Data Engineer! (Don’t forget to compare with the incomplete parsing above.)
+
+Now, let’s see the impact on the DataScientist side:
+
+`[fun_WithBindingsWeatherForecasts.R](https://gist.github.com/NRBPerdijk/da927c196ef81aece09b5561c0e8b6ba#file-fun_WithBindingsWeatherForecasts-R)`
+
+```
+generateWeatherForecasts <- function(pathToMagicFile) {
+  # We're bringing the function contained in the file at the given location into scope
+  source(paste(pathToMagicFile))
+
+  # This returns a dataframe, a way for R to store large quantities of data in an ordered
+  # manner (kind of like a Database Table...)
+  weatherForecast <- magicHappensHere()
+
+  # We use the Scala Domain object provided through GraalVM bindings to get ourselves an
+  # instance of the Scala wrapper containing a List of WeatherForecast
+  weatherForecastList <- Domain$weatherForecastList()
+
+  # We're looping over all the entries in the dataframe and getting the corresponding 
+  # elements from the proper columns/rows
+  for (count in seq(weatherForecast$humidity)) {
+    # Here we use the provided add method to add a new WeatherForecast to the List.
+    # Just like R, this Scala class returns a new, updated instance (rather than
+    # updating the old), so we're reassigning the variable to this new instance.
+    weatherForecastList <- weatherForecastList$add(
+      # We are using Domain to construct properly Typed Scala instances of Domain classes.
+      # Anything illegal (like putting a String in an Int, or Percentage) will cause an 
+      # exception at the location of insertion! (Instead of after parsing!)
+      # Yay for proper stacktraces!
+      Domain$weatherForecast(
+        Domain$percentage(weatherForecast$humidity[count]),
+        Domain$windForecast(
+          Domain$windSpeed(weatherForecast$windScale[count], weatherForecast$windSpeed[count]),
+          weatherForecast$windDirection[count]
+        ),
+        Domain$percentage(weatherForecast$sunshine[count]),
+        Domain$temperature(
+          weatherForecast$temperature[count],
+          weatherForecast$temperatureScale[count]
+        ),
+        Domain$chanceOfRain(Domain$percentage(weatherForecast$chanceOfRain[count]))
+      )
+    )
+  }
+
+  #like in Scala, the result of the last statement in an R function is its return.
+  weatherForecastList
+}
+```
+
+As we can see, the code has become more verbose (although it’s actually quite efficient still, if you take out all the clarifying comments I put in), but not quite as bad as in the previous solution:
+
+In this R file, we now need to convert the `data.frame` to proper `WeatherForecast` instances to be added to the `WeatherForecastList` we also got from `Domain`. But rather than doing a Parse & Pray, as we had to do with the no-bindings solution, we can now use proper constructors that will fail with intelligible errors if we make a mistake. (Sadly still only at runtime, because this is still R.) Cleanly taking values out of the `data.frame` is also better supported by its native language and we could add more convenience methods to more succinctly create the domain classes if we wanted to. If we have direct control over the function that creates the weather forecasts, we can even skip the `data.frame` altogether and exclusively use `WeatherForecastList`, which eliminates the extra code seen above.
+
+The biggest advantage, though, is that we now have a very clearly defined interface. Any user can open up the `Domain.scala` file to see what methods are available, what parameters they take and what things they return.
+
+## **Conclusion**
+
+Using Bindings to provide a clean shared domain between guest languages (like R or Python) and JVM languages (like Scala, Java or Kotlin) in GraalVM is pretty easy and gets rid of a lot of ugly and fault-sensitive parsing. It also provides a crucial stepping stone for further integration of functionalities across language boundaries.
+
+**PS**: I could have added a factory for each separate domain class to the bindings, instead of giving them a shared factory. This can make the code on the R side a little shorter, but creates a less clean interface (at least to my taste).
+
+## **Sourcecode**
+
+I have reused the example project from my previous article on [using GraalVM to execute R files from Scala](https://medium.com/codestar-blog/in-search-of-the-holy-graalvm-putting-the-r-in-scala-or-java-or-b057494f77)) and branched it for this article. The source code can be found [here](https://github.com/NRBPerdijk/example-graalvm-r-scala/tree/usingBindingsToShareDomain). The snippets above are taken from the linked project and altered to better fit the sizing of the article.

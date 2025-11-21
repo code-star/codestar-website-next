@@ -1,0 +1,132 @@
+---
+title: "Tika Tika! Getting started doing OCR with Apache Tika andTesseract from the JVM"
+original_url: "https://medium.com/codestar-blog/tika-tika-getting-started-doing-ocr-with-apache-tika-andtesseract-from-the-jvm-f5d2bfe9b397"
+source: "medium"
+author: Nathan Perdijk
+publishedAt: 2020-04-10
+---
+
+## Tika Tika! Getting started doing OCR with Apache Tika andTesseract from the JVM (Scala, Java, Kotlin…).
+
+_I can do DataScience, mate!_
+
+Some things are hard. Some things are not… Turns out that using OCR (Object Character Recognition) using Tesseract from the JVM is… not hard!
+
+<img src="https://cdn-images-1.medium.com/fit/c/292/100/1*Aj8UgvxNf7r4zTjs-JqL7A.jpeg" alt="" width="292" />
+
+The trickiest part, really, is [setting up Tesseract](https://github.com/tesseract-ocr/tesseract/wiki) on the machine you want to do your OCR on. Once you have managed to do that, you can just use the following Scala examples to use **Apache Tika** to do OCR in your own JVM project.
+
+### **First things first. Taking care of your dependencies…**
+
+Add these to your `pom.xml` or other build tool equivalent:
+
+`[pom.xml](https://gist.github.com/NRBPerdijk/111fae4189acafb2d75c7c66ba7f2be8#file-pom-xml)`
+
+```
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>1.24</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-parsers</artifactId>
+      <version>1.24</version>
+    </dependency>
+```
+
+### Then, we need to properly configure a Tika Parser
+
+We need one in order to do actually do any [parsing](https://tika.apache.org/1.24/parser.html). Because this kind of configuration tends to be ugly, I have put it all inside its own object/class to keep it separate from the rest of the code:
+
+`[TikaOCRParser.scala](https://gist.github.com/NRBPerdijk/b59332173c9598991f8774d98266e57d#file-TikaOCRParser-scala)`
+
+```
+package tika.example
+
+import java.io.InputStream
+
+import org.apache.tika.config.TikaConfig
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.parser.ocr.TesseractOCRConfig
+import org.apache.tika.parser.pdf.PDFParserConfig
+import org.apache.tika.parser.{AutoDetectParser, ParseContext, Parser}
+import org.apache.tika.sax.BodyContentHandler
+
+object TikaOCRParser {
+  private val pdfConfig: PDFParserConfig = {
+    val pdfConf = new PDFParserConfig()
+    pdfConf.setOcrDPI(100) //scalastyle:ignore magic.number
+    pdfConf.setDetectAngles(true)
+    pdfConf.setOcrStrategy(PDFParserConfig.OCR_STRATEGY.OCR_ONLY)
+
+    pdfConf
+  }
+
+  private val tesseractOCRConfig: TesseractOCRConfig = {
+    val tessConf = new TesseractOCRConfig()
+    tessConf.setLanguage("eng")
+    tessConf.setEnableImageProcessing(1)
+
+    tessConf
+  }
+
+  private val parser = new AutoDetectParser(TikaConfig.getDefaultConfig)
+
+  private val parseContext = {
+    val parseCont = new ParseContext()
+    parseCont.set(classOf[Parser], parser)
+    parseCont.set(classOf[PDFParserConfig], pdfConfig)
+    parseCont.set(classOf[TesseractOCRConfig], tesseractOCRConfig)
+    parseCont
+  }
+
+  def parse(inputStream: InputStream, handler: BodyContentHandler, metadata: Metadata): Unit = parser.parse(inputStream, handler, metadata, parseContext)
+}
+```
+
+Finally, we have to create…
+
+### The code that provides the file to be OCRed.
+
+`[TikaOCRApplication.scala](https://gist.github.com/NRBPerdijk/848526c10239f30129e20e8ea9ff6960#file-TikaOCRApplication-scala)`
+
+```
+package tika.example
+
+import java.io.ByteArrayOutputStream
+import java.nio.charset.Charset
+
+import org.apache.tika.metadata.Metadata
+import org.apache.tika.sax.BodyContentHandler
+
+import scala.util.{Failure, Success, Using}
+
+object TikaOCRApplication extends App {
+  val input = getClass.getResourceAsStream("/ExampleOCR.jpg")
+
+  val outputStream = new ByteArrayOutputStream()
+
+  val attemptedOCR = Using(input) { inputStream =>
+    TikaOCRParser.parse(inputStream, new BodyContentHandler(outputStream), new Metadata())
+  }.map { _ =>
+    new String(outputStream.toByteArray, Charset.defaultCharset())
+  }
+
+  attemptedOCR match {
+    case Success(value) => println(s"OCR result was: $value")
+    case Failure(exception) => println(s"OCR has failed, exception message was: ${exception.getMessage}")
+  }
+
+}
+```
+
+We just turn the file we want to `OCR` into an `InputStream` and hand that off to the `TikaOCRParser` we specified above for parsing. Because using `InputStreams` and doing parsing are two IO processes that can (definitely) throw `Exceptions`, I have delegated the handling of the `InputStream` using Scala’s `Using` functionality, which will automatically wrap the whole operation into a `Try` while also making sure that the `InputStream` is closed when everything is done, _even when exceptions are thrown_. If the result is a Success, I convert it into a regular String, which can then be printed, or otherwise used at your convenience.
+
+_(The example file is a_ `jpeg`, but lots of different image formats, as well as `PDF`, are supported. Some, like `JPEG2000`_, might require extra supporting software to be installed on the machine.)_
+
+So, that’s it. Pretty easy, right? Check out the [Apache Tika documentation](https://tika.apache.org/) to see what other great functionality is available. Tesseract OCR is a pretty tricky field in and off itself, so be sure to check out all the [tweaks](https://tesseract-ocr.github.io/tessdoc/ImproveQuality) you may have to make for your particular dataset. If you want to see the full code for this example, you can [check it out on GitHub](https://github.com/NRBPerdijk/tikascalaexample). Last but not least, kudos to the Apache Software Foundation for their continuing work towards great Open Source solutions.
+
+Edit: I also wrote a short intro using Apache Tika to do Named-Entity Recognition (NER): [Tika NERding: Getting started using Named-Entity Recognition with OpenNLP on the JVM](https://medium.com/codestar-blog/tika-nerding-getting-started-using-named-entity-recognition-with-opennlp-on-the-jvm-scala-java-befc396d6dc5).
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/391/1*P93TyWUqN0foFjmMaB0ehQ.jpeg" alt="" width="800" />

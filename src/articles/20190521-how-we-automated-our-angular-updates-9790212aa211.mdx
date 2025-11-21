@@ -1,0 +1,29 @@
+---
+title: "How we automated our Angular updates"
+original_url: "https://medium.com/codestar-blog/how-we-automated-our-angular-updates-9790212aa211"
+source: "medium"
+author: Bjorn 'Bjeaurn'
+publishedAt: 2019-05-21
+---
+
+### How we keep our developers actively involved with the ever-changing world around our own development.
+
+<img src="https://cdn-images-1.medium.com/fit/c/250/250/1*ZEGWmf7hHjjJsDOXVB_c9A.png" alt="" width="250" />
+
+> This article was written with the help of [Jan-Hendrik Kuperus](https://medium.com/u/3fb0a5abe9b8) and [Nathan Perdijk](https://medium.com/u/a2ee7eceb76f).
+
+Upgrading your Angular applications is quite easy with the Angular CLI. We have been faithfully upgrading to major releases usually within a week of release, without hesitation or issues since Angular 4.
+
+This process has been delightful. You get a compile error with some breaking changes and maybe there’s some manual work to be done, but other than that, it’s been quite effortless and easy to maintain.
+
+So much so, that we have automated our Angular upgrade process using our CI solution.
+
+## How we did it
+
+We have 5 steps in our CI pipeline. For our example we used Jenkins, but there’s no reason this wouldn’t work with any other CI pipeline.
+
+Our 5 steps consist of:
+
+*   Git checkout, workspace cleanup and creating a new branch.
+*   Using the Angular CLI to run our updates.
+*   If the updates cannot be applied automatically, or there were no updates available; we send a message to our communication platform of choice.

@@ -1,0 +1,21 @@
+---
+title: "Upgrading to Angular 9: My experience"
+original_url: "https://medium.com/codestar-blog/upgrading-to-angular-9-my-experience-65158c284034"
+source: "medium"
+author: Bjorn 'Bjeaurn'
+publishedAt: 2020-02-14
+---
+
+<img src="https://cdn-images-1.medium.com/fit/c/800/534/1*NtVSxnFcGi9P5ddosigsSA.png" alt="Angular with Ivy" width="800" />✍︎Angular with Ivy.
+
+Last week, version 9 of Angular was released. The much anticipated Ivy Renderer was now set to default. The promise of smaller bundle sizes and faster applications was just too much for me to pass over. So Monday first thing, I wanted to get my upgrade going.
+
+The following story shares my experiences in upgrading a sizable application with some complexity, giving a good indication of the types of issues you may be running into with your application.
+
+## Upgrading
+
+As any upgrade starts, I created a new branch and ran the usual `ng update` to see what versions are eligible for automatic upgrades. I tried to run a `ng update --all` which failed cause of dependency issues like TSLint, Codelyzer and `rxjs-tslint-rules` not being updated yet. Normally, you could go for a `ng update --all --force` and see if that sticks, but considering the complexity of our application, I prefer to do it a bit more manually.
+
+ng update @angular/cli @angular/core
+
+This works fine, updates the CLI first and then updates and runs all migrations for the Angular application. This may result in some compilation errors, as not all situations and edge cases can be taken care of in the automatic migrations. Especially in larger applications, you’ll run into some edge cases.
