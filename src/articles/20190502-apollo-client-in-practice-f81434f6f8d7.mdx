@@ -33,6 +33,7 @@ The way we used Apollo Client was also updated, to create a better separation of
 
 Example of wrapping a component in a Query HOC:
 
+```
 const Books = ({ data: { books } }) => (
   <ul>
     {books.map(book => <li>{book.title}</li>}
@@ -45,6 +46,7 @@ export graphql({ query: gql\`
     }
   }\`, 
   variables: { author: "Mickiewicz" })(Books);
+```
 
 Apollo reactively updates when using `Query` as a container, basically like the `connect` HOC in Redux. When the `variables` prop on the `Query` component is updated, it will automatically re-query. It uses the cache if possible and falls back to a network call if needed, although this behavior can be configured.
 
@@ -60,6 +62,7 @@ When using Redux, a common way to transform data in the store is using [Reselect
 
 from a data object
 
+```
 { 
   author: "Mickiewicz", 
   publications: \[ 
@@ -69,12 +72,15 @@ from a data object
     } 
   \] 
 }
+```
 
 to an array rows of cells
 
+```
 \[
   \[ "Mickiewicz", "Pan Tadeusz", "January 1834" \]
 \]
+```
 
 ## Next steps
 
