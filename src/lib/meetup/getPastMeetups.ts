@@ -1,21 +1,31 @@
+import {
+  eventsDocument,
+  GQL_ENDPOINT,
+  GROUP_URL_NAME,
+  mapResponseToMeetupEvents,
+} from "./meetup-graphql";
 import { IMeetupEvent, MeetupResponse } from "./meetup.types";
+import { request } from "graphql-request";
 
-// Meetup API test console: https://secure.meetup.com/meetup_api/console/?path=/:urlname/events
-const GET_PAST_EVENTS_URL =
-  "https://api.meetup.com/Codestar-Night/events?&sign=true&photo-host=public&page=20&desc=true&status=past&fields=featured_photo";
+const pastEventsVariables = {
+  urlname: GROUP_URL_NAME,
+  status: "PAST",
+  sortOrder: "DESC",
+};
 
 export const getPastMeetups = async (): Promise<Array<IMeetupEvent> | null> => {
   try {
-    const response = await fetch(GET_PAST_EVENTS_URL);
-    if (response.ok) {
-      const meetupResponse: MeetupResponse = await response.json();
-      return meetupResponse.slice(0, 7);
-    } else {
-      console.log("not ok");
-      return null;
-    }
+    const pastMeetupsResponse = await request<MeetupResponse>(
+      GQL_ENDPOINT,
+      eventsDocument,
+      pastEventsVariables
+    );
+
+    const meetupEvents = mapResponseToMeetupEvents(pastMeetupsResponse);
+
+    return meetupEvents.slice(0, 7);
   } catch (err) {
-    console.log(err);
+    console.log("getPastMeetups failed:", err);
     return null;
   }
 };

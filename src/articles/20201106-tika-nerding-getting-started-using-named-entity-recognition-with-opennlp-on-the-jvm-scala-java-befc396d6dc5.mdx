@@ -1,0 +1,117 @@
+---
+title: "Tika NERding: Getting started using Named-Entity Recognition with OpenNLP on the JVM (Scala, Java…"
+original_url: "https://medium.com/codestar-blog/tika-nerding-getting-started-using-named-entity-recognition-with-opennlp-on-the-jvm-scala-java-befc396d6dc5"
+source: "medium"
+author: Nathan Perdijk
+publishedAt: 2020-11-06
+---
+
+## Tika NERding: Getting started using Named-Entity Recognition with OpenNLP on the JVM (Scala, Java, Kotlin…)
+
+_For DataScience!_
+
+Some things are hard, some things are not… Turns out that doing NER (Named-Entity Recognition) on the JVM is… not! (Wait, _[that sounds familiar](https://medium.com/codestar-blog/tika-tika-getting-started-doing-ocr-with-apache-tika-andtesseract-from-the-jvm-f5d2bfe9b397)_…)
+
+<img src="/articles/images/1QvLkMzKtFw0DxqZ-pWiL8g.jpeg" alt="" width="292" />
+
+[NER](https://en.wikipedia.org/wiki/Named-entity_recognition) is the automated process of annotating words and phrases in sentences with relevant entity information, such as marking a word as a `Person`, or a `Location`. This can come in quite handy when doing automated text analysis and is a staple in the DataScience community. As the trouble with DataScience is often getting it into production, it is extremely handy that this technique can be directly used from JVM-languages. Now we can embed this technology in production ready applications built in Java, Scala, Kotlin...
+
+First things first, the dependencies. These are all the dependencies from the `.pom.xml` file used for this example project:
+
+`[pom.xml](https://gist.github.com/NRBPerdijk/e902356b5021253cd3fbf728fc922927#file-pom-xml)`
+
+```
+    <dependencies>
+        <dependency>
+            <!-- The only Tika component strictly necessary for doing NER -->
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
+            <version>1.24.1</version>
+        </dependency>
+
+        <dependency>
+            <!-- We need a logger to see the logging that Tika provides -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
+        </dependency>
+    </dependencies>
+```
+
+Yes, that’s it.
+
+For doing NER on `String` this is really all we need, but Apache Tika can also extract text from PDFs or even [perform OCR](https://medium.com/codestar-blog/tika-tika-getting-started-doing-ocr-with-apache-tika-andtesseract-from-the-jvm-f5d2bfe9b397), but you’ll need additional dependencies.
+
+Then we need to download the models that we want to use and place them in our `resources` folder. You can download suitable OpenNLP models from [http://opennlp.sourceforge.net/models-1.5/](http://opennlp.sourceforge.net/models-1.5/). These are conveniently wrapped in `.bin` format and should NOT be unpacked.
+
+For this example, we will be using English language Models that can recognise `Date`, `Location`, `Organization` and `Person`, but there are also models available in other languages. Every model you want to use, you’ll need to add to a `Java Map` (or you can use `SystemProperties` for Tika to “discover”, but that’s a method I don’t like very much):
+
+`[AddingModels.scala](https://gist.github.com/NRBPerdijk/238f1d9847f4ab2d49816497788f45c0#file-AddingModels-scala)`
+
+```
+  val models = new java.util.HashMap[String, String]()
+  models.put("Dates", "en-ner-date.bin")
+  models.put("Locations", "en-ner-location.bin")
+  models.put("Organisations", "en-ner-organization.bin")
+  models.put("Persons", "en-ner-person.bin")
+```
+
+Now `models` contains four models, so let’s feed them to Tika:
+
+`[OpenNLPNERecogniser.scala](https://gist.github.com/NRBPerdijk/3f47b27e0bb81477213b7228936055d4#file-OpenNLPNERecogniser-scala)`
+
+```
+  val nerRecogniser = new OpenNLPNERecogniser(models)
+```
+
+Alright, now all we need is to feed a `String` of text to the `nerRecogniser`:
+
+`[GettingResults.scala](https://gist.github.com/NRBPerdijk/22233389929c1c82636195974c178977#file-GettingResults-scala)`
+
+```
+val results = nerRecogniser.recognise(articleTextPart1)
+```
+
+And now you can just go about using the results. Tika will return a `Map`, containing a `key` for each model that has managed to find matching results, and with each key there’s a `value` containing those results. In order to improve the prints, I’ve done a bit of tinkering as it is now DEMO time.
+
+I’m using the contents of the [Wikipedia](https://en.wikipedia.org/) article on the [Peace of Utrecht](https://en.wikipedia.org/wiki/Peace_of_Utrecht).
+
+For the first paragraph, this is my input text:
+
+"The Peace of Utrecht is a series of peace treaties signed by the belligerents in the War of the Spanish Succession, in the Dutch city of Utrecht between April 1713 and February 1715. The war involved three contenders for the vacant throne of Spain, and involved much of Europe for over a decade. The main action saw France as the defender of Spain against a multinational coalition. The war was very expensive and bloody and finally stalemated. Essentially, the treaties allowed Philip V (grandson of King Louis XIV of France) to keep the Spanish throne in return for permanently renouncing his claim to the French throne, along with other necessary guarantees that would ensure that France and Spain should not merge, thus preserving the balance of power in Europe.\\n\\nThe treaties between several European states, including Spain, Great Britain, France, Portugal, Savoy and the Dutch Republic, helped end the war. The treaties were concluded between the representatives of Louis XIV of France and of his grandson Philip on one hand, and representatives of Anne of Great Britain, Victor Amadeus II of Sardinia, John V of Portugal and the United Provinces of the Netherlands on the other. Though the king of France ensured the Spanish crown for his dynasty, the treaties marked the end of French ambitions of hegemony in Europe expressed in the continuous wars of Louis XIV, and paved the way to the European system based on the balance of power.\[1\] British historian G. M. Trevelyan argues:\\n\\nThat Treaty, which ushered in the stable and characteristic period of Eighteenth-Century civilization, marked the end of danger to Europe from the old French monarchy, and it marked a change of no less significance to the world at large, — the maritime, commercial and financial supremacy of Great Britain.\[2\]\\n\\nAnother enduring result was the creation of the Spanish Bourbon Dynasty, still reigning over Spain up to the present while the original House of Bourbon has long since been dethroned in France."
+
+And these are the results from Tika NER:
+
+Locations: Britain, Milan, Nova Scotia, Cape Breton, Italy, France, Africa, Sicily, North Sea, North America, Amazon, Spain, Rastatt, Portugal, Sacramento, North
+
+Organisations: Article XIII, Spain
+
+Persons: Philip V, Philippe, Philip, Louis XIV's, Louis XV, Charles VI., Oyapock, Saint Kitts
+
+Date: 1713, 1720, 1713., 1712, 1714
+
+And a second example, the second part of the article:
+
+"The War of the Spanish Succession was occasioned by the failure of the Habsburg king, Charles II of Spain, to produce an heir. Dispute followed the death of Charles II in 1700, and fourteen years of war were the result.\\n\\nFrance and Great Britain had come to terms in October 1711, when the preliminaries of peace had been signed in London. The preliminaries were based on a tacit acceptance of the partition of Spain's European possessions. Following this, the Congress of Utrecht opened on 29 January 1712, with the British representatives being John Robinson, Bishop of Bristol, and Thomas Wentworth, Lord Strafford.\[3\] Reluctantly the United Provinces accepted the preliminaries and sent representatives, but Emperor Charles VI refused to do so until he was assured that the preliminaries were not binding. This assurance was given, and so in February the Imperial representatives made their appearance. As Philip was not yet recognized as its king, Spain did not at first send plenipotentiaries, but the Duke of Savoy sent one, and the Kingdom of Portugal was represented by Luís da Cunha. One of the first questions discussed was the nature of the guarantees to be given by France and Spain that their crowns would be kept separate, and little progress was made until 10 July 1712, when Philip signed a renunciation.\[4\]\\n\\nWith Great Britain, France and Spain having agreed to a \\"suspension of arms\\" (armistice) covering Spain on 19 August in Paris, the pace of negotiation quickened. The first treaty signed at Utrecht was the truce between France and Portugal on 7 November, followed by the truce between France and Savoy on 14 March 1714. That same day, Spain, Great Britain, France and the Empire agreed to the evacuation of Catalonia and an armistice in Italy. The main treaties of peace followed on 11 April 1713. These were five separate treaties between France and Great Britain, the Netherlands, Savoy, Prussia and Portugal. Spain under Philip V signed separate peace treaties with Savoy and Great Britain at Utrecht on 13 July. Negotiations at Utrecht dragged on into the next year, for the peace treaty between Spain and the Netherlands was only signed on 26 June 1714 and that between Spain and Portugal on 6 February 1715.\[5\]\\n\\nSeveral other treaties came out of the congress of Utrecht. France signed treaties of commerce and navigation with Great Britain and the Netherlands (11 April 1713). Great Britain signed a like treaty with Spain (9 December 1713).\[5\]"
+
+And the results:
+
+Locations: 1715.\[16\], Britain, Spanish Netherlands, Austrian Netherlands, France
+
+Organisations: Oxford, House of, United Provinces, Dutch, Austro-Dutch Barrier Treaty, Harley, Duke, Earl, Allied
+
+Persons: Robert Harley, William III, Earl
+
+Date: 1710, 1709., May 1711), 1706
+
+As you can see, not everything is found, or classified correctly, but it provides a good starting point for further text analysis and it took very little effort to get this working at all! Named-Entity Recognition is a tricky technique, so you may need to preprocess your texts a bit before you get good analysis results for your particular data set, but it’s definitely not difficult to get started.
+
+You can download suitable OpenNLP models from [http://opennlp.sourceforge.net/models-1.5/](http://opennlp.sourceforge.net/models-1.5/).
+
+Check out the [Apache Tika documentation](https://tika.apache.org/) to see what other great functionality is available.
+
+If you want to take a closer look at this example, you can check it out from Github: [https://github.com/NRBPerdijk/examplenertikascala/](https://github.com/NRBPerdijk/examplenertikascala/)
+
+Last but not least, kudos to the Apache Software Foundation for their continuing work towards great Open Source solutions.
+
+<img src="/articles/images/1cQGXudGNVjRGDM2uB-BuGA.jpeg" alt="" width="700" />
