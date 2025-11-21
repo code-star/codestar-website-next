@@ -129,15 +129,17 @@ export const getBlogPosts = (): IPublication[] => {
 export const getPublications = async (): Promise<IPublication[] | null> => {
   try {
     const blogPosts = getBlogPosts();
-    const mediumPublications = await getMediumPublications();
+    // const mediumPublications = await getMediumPublications();
 
-    return blogPosts
-      .concat(mediumPublications)
-      .sort((publication, otherPublication) => {
-        const date = new Date(publication.latestPublishedAt);
-        const otherDate = new Date(otherPublication.latestPublishedAt);
-        return otherDate.getTime() - date.getTime();
-      });
+    return (
+      blogPosts
+        // .concat(mediumPublications)
+        .sort((publication, otherPublication) => {
+          const date = new Date(publication.latestPublishedAt);
+          const otherDate = new Date(otherPublication.latestPublishedAt);
+          return otherDate.getTime() - date.getTime();
+        })
+    );
   } catch (err) {
     console.error("error: " + err);
     return null;
