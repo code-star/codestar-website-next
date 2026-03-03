@@ -5,6 +5,7 @@ import mdworldImg from "./0_gTl35Xy5zRcgu5wJ.png";
 import nickImg from "./2_k7vMxGfKwfqJ86TcprDA_Q.jpg";
 import hamzaImg from "./2_1JTGoMi8_nuGQVO1EoItXg.png";
 import bjornImg from "./0_o9UzuQyUwobacrCt.jpg";
+import kayaImg from "./0_9n8sXo2l3mLh7e5.jpg";
 import Image, { StaticImageData } from "next/image";
 
 const avatars: Record<string, StaticImageData> = {
@@ -13,6 +14,7 @@ const avatars: Record<string, StaticImageData> = {
   "bjorn ‘bjeaurn’": bjornImg,
   "hamza haiken": hamzaImg,
   "nick ten veen": nickImg,
+  "kaya weers" : kayaImg,
 };
 
 export const PublicationCardAvatar: FC<{ author: string }> = ({ author }) => {
