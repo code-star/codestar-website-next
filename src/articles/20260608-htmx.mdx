@@ -1,0 +1,218 @@
+---
+title: "HTMX: Reactive Frontend from the Backend"
+author: Nathan Perdijk
+publishedAt: 2026-06-08
+---
+
+It's a scene that will be familiar to everyone:
+
+An application for internal use, with a solid backend doing the heavy lifting and a frontend that… exists… Because there has to be some kind of user interface and it would be nice if it were somewhat "reactive."
+
+The result? A steep Angular/React/Hot FrontEnd Framework Of The Week learning curve, an endless stream of FE dependencies that constantly need to be kept up to date, a Node version that keeps picking fights with you, and a hundred million billion NPM modules…
+
+For a little bit of reactive Frontend.
+
+Is that really necessary?
+
+Well, uh, no.
+
+With HTMX, a bit of knowledge of HTML and some CSS, you can actually just do it yourself… No JavaScript or TypeScript. No Angular or React. Just, from the Backend.
+
+# Look Mom, No JavaScript!
+
+Well, almost. To get HTMX up and running you need exactly one JavaScript dependency, namely HTMX itself. (Oops, already caught in a tiny little lie.) But without any self-written JavaScript, so close enough! To use it, you can embed it as a script in your served HTML code (see <a id="ref-listing-1"></a>[Listing 1](#listing-1)). The library is then served to the browser via a Content Delivery Network (CDN for the initiated), allowing the HTMX tags in your HTML code to do their job.
+
+However, there are objections to using a CDN regarding privacy, security, and the functioning of your website when other parts of the internet go down. It is therefore better to simply include your own copy in your project, by [downloading it](https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js) and making it available via your application server. In a SpringBoot project, for example, you only need to place the file in `/resources/static/htmx.js` and it will automatically be loaded from your own application server when you reference it in your HTML (see <a id="ref-listing-2"></a>[Listing 2](#listing-2)). Great, now that we've done that, we have the power of all kinds of handy frontend tricks at our Backend fingertips. By adding a few simple attributes to our HTML and defining smart endpoints in the Backend, we can go all out.
+
+# From JSON to HTML
+
+The first thing that really stands out when you start using HTMX is that the need for JSON traffic disappears entirely. Instead, the HTMX attributes send classic AJAX Requests from the HTML itself. On the server side, you respond with HTML snippets to effect changes in the browser. This makes HTML the communication language once again. Moreover, you are not limited to anchors and forms for sending HTTP requests: any HTML element or browser event can be used to send requests to the Backend. And any HTML element can become the target of the Backend's response, making it possible to hot-swap small pieces of the DOM tree. Let me outline the new process:
+
+The endpoint that returns your homepage delivers an HTML file containing the `<script>` tag to make the HTMX 
+JavaScript library available. Within that HTML page, you provide the HTML elements that need to be interactive with 
+the correct HTMX tag and a reference to the Backend endpoint that HTMX should call for you when the triggers are met.
+Based on which tag you have used, the new HTML returned by the Backend endpoint is used to, for example, replace an 
+existing section, insert an additional section, manipulate buttons or forms, apply CSS decoration… And it doesn't 
+even have to be in the element itself — it can also reference other elements to replace THOSE. This Partial HTML 
+replacement is very powerful and does not lead to full page refreshes: just like with modern Frontend frameworks, 
+only the relevant pieces of the DOM tree are updated. Finally, Websockets are also supported via extensions, so the 
+Backend can proactively push changes to the HTML page!
+
+Everything is therefore controlled from the **Backend**: the HTML + CSS, the logic for when an HTML swap should take 
+place, and the logic for which particular server endpoint is responsible for handling the message traffic! This 
+eliminates 
+some annoyances from current web applications: JSON can go straight into the trash, the communication language becomes plain HTML again. That HTML comes from the Backend and can therefore simply be tested in the Backend: in many cases, you no longer need to start a browser to test the HTML interactions, which saves you an entire layer of often *flaky* integration tests. In fact, a server doesn't necessarily need to be started either — with a bit of clever code setup, practically everything can be captured in unit tests. We'll come back to this, but first let's continue with the new capabilities.
+
+# The Toolbox
+
+As mentioned, HTMX provides attributes that you can include in your HTML, allowing it to interact with the Backend and with other parts of your HTML. The five attributes `hx-get`, `hx-post`, `hx-put`, `hx-patch`, and `hx-delete` will, when activated, send the corresponding GET/POST/PUT/PATCH or DELETE request to the specified endpoint. By adding an `hx-trigger` attribute, you can determine under which circumstances the request is actually sent — for example, in the case of a `mouseenter`, a `click`, or your own custom-defined events. You can also configure a polling mechanism via triggers, or combine multiple triggers. In <a id="ref-listing-3a"></a>[Listing 3a](#listing-3a), for example, a POST request is sent to the endpoint `/clickbait-clicked` when the button is clicked. For more information about triggers, see [the HTMX documentation on triggers](https://htmx.org/attributes/hx-trigger/). The called endpoint naturally returns an HTML response as well. In your HTML, you can define what HTMX should do with that new HTML.
+
+# Such an Easy hx-target
+
+If you don't provide HTMX with a target, HTMX uses the content of the HTML element that sent the request as the target for the new HTML. In [Listing 3a](#listing-3a), the text on the button will therefore be replaced by the HTML returned from the Backend (<a id="ref-listing-3b"></a>[Listing 3b](#listing-3b)). But often on your web page, you want changes to happen elsewhere upon user interaction. If you have another piece of HTML on your web page in mind, you can fortunately tell HTMX that it has a different target, by adding `hx-target="#name-of-html-anchor-elsewhere"`. In that case, the HTML element with that anchor as its attribute becomes the target of your request. But a target alone is not enough — depending on what you want to happen, you may want to replace the content of the targeted HTML, or rather the surrounding HTML, or insert HTML above or below the target, or delete it… It's all possible — see the table in <a id="ref-listing-4"></a>[Listing 4](#listing-4), borrowed directly from [the HTMX documentation itself](https://htmx.org/docs/#swapping). For another practical example, see <a id="ref-listing-5"></a>[Listing 5](#listing-5), where clicking a button in a table with anchor "inner-outer-table" adds an extra row to the end of that table.
+
+# End of Introduction
+
+In this article, a number of important features of HTMX have been covered to make an interactive website possible, entirely driven from HTML and Backend. This overview is certainly not complete, however. The [extensive HTMX documentation](https://htmx.org/docs/) lists many more interesting features, including ways to handle more complex use cases such as validation, caching, and security. If you're enthusiastic about the possibilities, definitely go play around with HTMX with the documentation open beside you. Because you don't bring in any new dependencies on build tools and programming languages, "just trying HTMX" is really easy to do. Especially since the Backend language and framework are also irrelevant, as long as you can serve HTTP Requests and Responses.
+
+# Away with the Split
+
+The use of HTMX is potentially more than just a way for Backend developers to reliably build Frontends. It is also a way to undo the split that has emerged between domain logic and user interaction within web apps. In today's web apps, most domain logic lives in the Backend. Here, user input, after being sanitized and validated, can be safely applied to the state of the application. The Frontend primarily contains logic to tie the various page components together and also contains logic to determine which Backend services need to be called (and in what order) to get this information to the Backend and show the correct data to the user. The data traffic is in most cases done in JSON for representing the data itself, combined with HTML Status Codes to handle general approval/rejection and problem signaling from the Backend. This all still sounds like a fairly sharp separation between the Backend with its "domain logic" and "ownership of the state" versus the "frontend" and its responsibility to display the state to the user and give the user handles to interact with it safely.
+
+In practice, there is usually no such clean separation between Frontend and Backend. Often the Frontend contains 
+logic that is implicitly or explicitly dependent on domain logic that also already exists on the Backend side, 
+leading to duplication of these pieces of logic (with accompanying challenges and risks). Because it is relatively 
+easy to manipulate requests between Frontend and Backend, or to make requests from, say, Postman that are not even 
+possible via the Frontend, the Backend still needs to validate that the incoming information is correct and safe. 
+Double work increases the chance of errors. Then there is also the strong coupling between the two, purely based on 
+the data exchange itself: in both the Frontend code and the Backend code, a translation between the information in 
+the JSON objects and the rest of the codebase must take place, binding them both to the same JSON contract. There 
+are certainly inventions to prepare changes in the Backend or Frontend and then implement them in the other codebase 
+as well, but that is merely mitigation of the problem. An incorrect change to the Backend can easily break the 
+Frontend and vice versa. The core of the problem is actually very simple: a web app is simply one logical whole and 
+splitting the codebase into a "Frontend" and a "Backend," with different programming languages and frameworks, leads 
+to logic duplication, expensive integration tests, and risks that the two fall out of sync. With HTMX and HTML from 
+the Backend, there is only one place where logic and user interaction come together. Of course, this discussion 
+becomes considerably more complex when multiple Frontends serve the same Backend, but this is a relatively rare 
+situation. Another challenge is convincing our well-valued Frontend colleagues that building a Frontend in the 
+Backend really is more fun. How much effort can that be? Two story points?
+
+# Bio
+
+Nathan is a software engineer at Codestar powered by Sopra Steria with a keen interest in Functional and Reactive Programming.
+
+
+This article was originally written in Dutch and published in Java Magazine published by NLJUG in 2025, third issue: 
+https://nljug.org/category/java-magazine/
+https://online.fliphtml5.com/chjal/ucim/#p=27
+
+# Listings
+
+## <a id="listing-1"></a>Listing 1
+
+```html
+<script 
+  src="https://unpkg.com/htmx.org@2.0.4" 
+  integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" 
+  crossorigin="anonymous">
+</script>
+```
+
+[↩ Back to text](#ref-listing-1)
+
+## <a id="listing-2"></a>Listing 2
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<script src="htmx.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to HTMX!</title>
+</head>
+```
+
+[↩ Back to text](#ref-listing-2)
+
+## <a id="listing-3a"></a>Listing 3a
+
+```html
+<button hx-post="/clickbait-clicked"
+        hx-trigger="click"
+>
+Click Me! You know you want to! This is not clickbait!
+</button>
+```
+
+[↩ Back to text](#ref-listing-3a)
+
+## <a id="listing-3b"></a>Listing 3b
+
+```java
+@Component
+public class ClickbaitHandler {
+    private int counter = 0;
+    public Mono<ServerResponse> clickbaitClicked(ServerRequest request) {
+        counter++;
+        return ServerResponse
+                .ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(BodyInserters.fromValue("Clicked the clickbait: " + counter + " times!"));
+    }
+}
+```
+
+[↩ Back to text](#ref-listing-3b)
+
+## <a id="listing-4"></a>Listing 4:
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>innerHTML</td>
+      <td>the default, puts the content inside the target element</td>
+    </tr>
+    <tr>
+      <td>outerHTML</td>
+      <td>replaces the entire target element with the returned content</td>
+    </tr>
+    <tr>
+      <td>afterbegin</td>
+      <td>prepends the content before the first child inside the target</td>
+    </tr>
+    <tr>
+      <td>beforebegin</td>
+      <td>prepends the content before the target in the target's parent element</td>
+    </tr>
+    <tr>
+      <td>beforeend</td>
+      <td>appends the content after the last child inside the target</td>
+    </tr>
+    <tr>
+      <td>afterend</td>
+      <td>appends the content after the target in the target's parent element</td>
+    </tr>
+    <tr>
+      <td>delete</td>
+      <td>deletes the target element regardless of the response</td>
+    </tr>
+    <tr>
+      <td>none</td>
+      <td>does not append content from response (Out of Band Swaps and Response Headers will still be processed)</td>
+    </tr>
+  </tbody>
+</table>
+
+[↩ Back to text](#ref-listing-4)
+
+## <a id="listing-5"></a>Listing 5:
+
+```html
+<table id="inner-outer-table">
+    <tr hx-get="/before-end"
+        hx-swap="beforeend"
+        hx-target="#inner-outer-table"
+    >
+        <td>
+            hx-swap="beforeend"
+        </td>
+        <td>
+            targeting the entire table
+        </td>
+        <td>
+            <button>
+                Click Me! I will insert a row at the end of the table!
+            </button>
+        </td>
+    </tr>
+</table>
+```
+
+[↩ Back to text](#ref-listing-5)
+
