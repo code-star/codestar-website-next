@@ -4,8 +4,6 @@ author: Nathan Perdijk
 publishedAt: 2026-06-08
 ---
 
-# HTMX: Reactive Frontend from the Backend
-
 It's a scene that will be familiar to everyone:
 
 An application for internal use, with a solid backend doing the heavy lifting and a frontend that… exists… Because there has to be some kind of user interface and it would be nice if it were somewhat "reactive."
@@ -22,9 +20,9 @@ With HTMX, a bit of knowledge of HTML and some CSS, you can actually just do it 
 
 # Look Mom, No JavaScript!
 
-Well, almost. To get HTMX up and running you need exactly one JavaScript dependency, namely HTMX itself. (Oops, already caught in a tiny little lie.) But without any self-written JavaScript, so close enough! To use it, you can embed it as a script in your served HTML code (see Listing 1). The library is then served to the browser via a Content Delivery Network (CDN for the initiated), allowing the HTMX tags in your HTML code to do their job.
+Well, almost. To get HTMX up and running you need exactly one JavaScript dependency, namely HTMX itself. (Oops, already caught in a tiny little lie.) But without any self-written JavaScript, so close enough! To use it, you can embed it as a script in your served HTML code (see <a id="ref-listing-1"></a>[Listing 1](#listing-1)). The library is then served to the browser via a Content Delivery Network (CDN for the initiated), allowing the HTMX tags in your HTML code to do their job.
 
-However, there are objections to using a CDN regarding privacy, security, and the functioning of your website when other parts of the internet go down. It is therefore better to simply include your own copy in your project, by downloading it [footnote 1] and making it available via your application server. In a SpringBoot project, for example, you only need to place the file in `/resources/static/htmx.js` and it will automatically be loaded from your own application server when you reference it in your HTML (see Listing 2). Great, now that we've done that, we have the power of all kinds of handy frontend tricks at our Backend fingertips. By adding a few simple attributes to our HTML and defining smart endpoints in the Backend, we can go all out.
+However, there are objections to using a CDN regarding privacy, security, and the functioning of your website when other parts of the internet go down. It is therefore better to simply include your own copy in your project, by [downloading it](https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js) and making it available via your application server. In a SpringBoot project, for example, you only need to place the file in `/resources/static/htmx.js` and it will automatically be loaded from your own application server when you reference it in your HTML (see <a id="ref-listing-2"></a>[Listing 2](#listing-2)). Great, now that we've done that, we have the power of all kinds of handy frontend tricks at our Backend fingertips. By adding a few simple attributes to our HTML and defining smart endpoints in the Backend, we can go all out.
 
 # From JSON to HTML
 
@@ -47,15 +45,15 @@ some annoyances from current web applications: JSON can go straight into the tra
 
 # The Toolbox
 
-As mentioned, HTMX provides attributes that you can include in your HTML, allowing it to interact with the Backend and with other parts of your HTML. The five attributes `hx-get`, `hx-post`, `hx-put`, `hx-patch`, and `hx-delete` will, when activated, send the corresponding GET/POST/PUT/PATCH or DELETE request to the specified endpoint. By adding an `hx-trigger` attribute, you can determine under which circumstances the request is actually sent — for example, in the case of a `mouseenter`, a `click`, or your own custom-defined events. You can also configure a polling mechanism via triggers, or combine multiple triggers. In Listing 3a, for example, a POST request is sent to the endpoint `/clickbait-clicked` when the button is clicked. For more information about triggers, see Footnote 2. The called endpoint naturally returns an HTML response as well. In your HTML, you can define what HTMX should do with that new HTML.
+As mentioned, HTMX provides attributes that you can include in your HTML, allowing it to interact with the Backend and with other parts of your HTML. The five attributes `hx-get`, `hx-post`, `hx-put`, `hx-patch`, and `hx-delete` will, when activated, send the corresponding GET/POST/PUT/PATCH or DELETE request to the specified endpoint. By adding an `hx-trigger` attribute, you can determine under which circumstances the request is actually sent — for example, in the case of a `mouseenter`, a `click`, or your own custom-defined events. You can also configure a polling mechanism via triggers, or combine multiple triggers. In <a id="ref-listing-3a"></a>[Listing 3a](#listing-3a), for example, a POST request is sent to the endpoint `/clickbait-clicked` when the button is clicked. For more information about triggers, see [the HTMX documentation on triggers](https://htmx.org/attributes/hx-trigger/). The called endpoint naturally returns an HTML response as well. In your HTML, you can define what HTMX should do with that new HTML.
 
 # Such an Easy hx-target
 
-If you don't provide HTMX with a target, HTMX uses the content of the HTML element that sent the request as the target for the new HTML. In Listing 3a, the text on the button will therefore be replaced by the HTML returned from the Backend (Listing 3b). But often on your web page, you want changes to happen elsewhere upon user interaction. If you have another piece of HTML on your web page in mind, you can fortunately tell HTMX that it has a different target, by adding `hx-target="#name-of-html-anchor-elsewhere"`. In that case, the HTML element with that anchor as its attribute becomes the target of your request. But a target alone is not enough — depending on what you want to happen, you may want to replace the content of the targeted HTML, or rather the surrounding HTML, or insert HTML above or below the target, or delete it… It's all possible — see the table in Listing 4, borrowed directly from the HTMX documentation itself (Footnote 3). For another practical example, see Listing 5, where clicking a button in a table with anchor "inner-outer-table" adds an extra row to the end of that table.
+If you don't provide HTMX with a target, HTMX uses the content of the HTML element that sent the request as the target for the new HTML. In [Listing 3a](#listing-3a), the text on the button will therefore be replaced by the HTML returned from the Backend (<a id="ref-listing-3b"></a>[Listing 3b](#listing-3b)). But often on your web page, you want changes to happen elsewhere upon user interaction. If you have another piece of HTML on your web page in mind, you can fortunately tell HTMX that it has a different target, by adding `hx-target="#name-of-html-anchor-elsewhere"`. In that case, the HTML element with that anchor as its attribute becomes the target of your request. But a target alone is not enough — depending on what you want to happen, you may want to replace the content of the targeted HTML, or rather the surrounding HTML, or insert HTML above or below the target, or delete it… It's all possible — see the table in <a id="ref-listing-4"></a>[Listing 4](#listing-4), borrowed directly from [the HTMX documentation itself](https://htmx.org/docs/#swapping). For another practical example, see <a id="ref-listing-5"></a>[Listing 5](#listing-5), where clicking a button in a table with anchor "inner-outer-table" adds an extra row to the end of that table.
 
 # End of Introduction
 
-In this article, a number of important features of HTMX have been covered to make an interactive website possible, entirely driven from HTML and Backend. This overview is certainly not complete, however. The extensive HTMX documentation (Footnote 4) lists many more interesting features, including ways to handle more complex use cases such as validation, caching, and security. If you're enthusiastic about the possibilities, definitely go play around with HTMX with the documentation open beside you. Because you don't bring in any new dependencies on build tools and programming languages, "just trying HTMX" is really easy to do. Especially since the Backend language and framework are also irrelevant, as long as you can serve HTTP Requests and Responses.
+In this article, a number of important features of HTMX have been covered to make an interactive website possible, entirely driven from HTML and Backend. This overview is certainly not complete, however. The [extensive HTMX documentation](https://htmx.org/docs/) lists many more interesting features, including ways to handle more complex use cases such as validation, caching, and security. If you're enthusiastic about the possibilities, definitely go play around with HTMX with the documentation open beside you. Because you don't bring in any new dependencies on build tools and programming languages, "just trying HTMX" is really easy to do. Especially since the Backend language and framework are also irrelevant, as long as you can serve HTTP Requests and Responses.
 
 # Away with the Split
 
@@ -90,13 +88,19 @@ https://online.fliphtml5.com/chjal/ucim/#p=27
 
 # Listings
 
-Listing 1
+## <a id="listing-1"></a>Listing 1
 
 ```html
-<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+<script 
+  src="https://unpkg.com/htmx.org@2.0.4" 
+  integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" 
+  crossorigin="anonymous">
+</script>
 ```
 
-Listing 2
+[↩ Back to text](#ref-listing-1)
+
+## <a id="listing-2"></a>Listing 2
 
 ```html
 <!DOCTYPE html>
@@ -108,7 +112,9 @@ Listing 2
 </head>
 ```
 
-Listing 3a
+[↩ Back to text](#ref-listing-2)
+
+## <a id="listing-3a"></a>Listing 3a
 
 ```html
 <button hx-post="/clickbait-clicked"
@@ -118,7 +124,9 @@ Click Me! You know you want to! This is not clickbait!
 </button>
 ```
 
-Listing 3b
+[↩ Back to text](#ref-listing-3a)
+
+## <a id="listing-3b"></a>Listing 3b
 
 ```java
 @Component
@@ -134,20 +142,56 @@ public class ClickbaitHandler {
 }
 ```
 
-Listing 4:
+[↩ Back to text](#ref-listing-3b)
 
-| Name | Description |
-|------|-------------|
-| innerHTML | the default, puts the content inside the target element |
-| outerHTML | replaces the entire target element with the returned content |
-| afterbegin | prepends the content before the first child inside the target |
-| beforebegin | prepends the content before the target in the target's parent element |
-| beforeend | appends the content after the last child inside the target |
-| afterend | appends the content after the target in the target's parent element |
-| delete | deletes the target element regardless of the response |
-| none | does not append content from response (Out of Band Swaps and Response Headers will still be processed) |
+## <a id="listing-4"></a>Listing 4:
 
-Listing 5:
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>innerHTML</td>
+      <td>the default, puts the content inside the target element</td>
+    </tr>
+    <tr>
+      <td>outerHTML</td>
+      <td>replaces the entire target element with the returned content</td>
+    </tr>
+    <tr>
+      <td>afterbegin</td>
+      <td>prepends the content before the first child inside the target</td>
+    </tr>
+    <tr>
+      <td>beforebegin</td>
+      <td>prepends the content before the target in the target's parent element</td>
+    </tr>
+    <tr>
+      <td>beforeend</td>
+      <td>appends the content after the last child inside the target</td>
+    </tr>
+    <tr>
+      <td>afterend</td>
+      <td>appends the content after the target in the target's parent element</td>
+    </tr>
+    <tr>
+      <td>delete</td>
+      <td>deletes the target element regardless of the response</td>
+    </tr>
+    <tr>
+      <td>none</td>
+      <td>does not append content from response (Out of Band Swaps and Response Headers will still be processed)</td>
+    </tr>
+  </tbody>
+</table>
+
+[↩ Back to text](#ref-listing-4)
+
+## <a id="listing-5"></a>Listing 5:
 
 ```html
 <table id="inner-outer-table">
@@ -170,12 +214,5 @@ Listing 5:
 </table>
 ```
 
-# Footnotes
+[↩ Back to text](#ref-listing-5)
 
-Footnote 1: https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js
-
-Footnote 2: https://htmx.org/attributes/hx-trigger/
-
-Footnote 3: https://htmx.org/docs/#swapping
-
-Footnote 4: https://htmx.org/docs/
