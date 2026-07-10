@@ -30,7 +30,7 @@ The following sections present various methods, ordered by (subjective) graphica
 
 Let's start simple.
 
-How do you draw something on the screen when you can only display text? Many 1970s and 1980s computers answered this question by providing characters specifically for *faking graphics* (often called ["semigraphics"](https://en.wikipedia.org/wiki/Semigraphics) [1]).
+How do you draw something on the screen when you can only display text? Many 1970s and 1980s computers answered this question by providing characters specifically for *faking graphics* (often called ["semigraphics"](https://en.wikipedia.org/wiki/Semigraphics)).
 
 By the late 1970s, ASCII had been well-established for over a decade, but it only defined characters up to 7 bits. Manufacturers freely customized the upper half of their 8-bit character sets, often using the extra slots to add custom graphical characters. This led to a variety of approaches, each unique to different computer families.
 
@@ -64,7 +64,7 @@ This increased resolution is not a chronological evolution from the previously m
 
 Computers that supported 2×3 block graphics included the [TRS-80](https://en.wikipedia.org/wiki/TRS-80) (1977) and the [BBC Micro](https://en.wikipedia.org/wiki/BBC_Micro) (1981).
 
-This character set should look familiar to European readers. In fact, we used it on our TVs to check the news, weather forecast, train schedules, or channel programs. Yes, [Teletext](https://en.wikipedia.org/wiki/Teletext) [2] used this exact character set to draw its graphics!
+This character set should look familiar to European readers. In fact, we used it on our TVs to check the news, weather forecast, train schedules, or channel programs. Yes, [Teletext](https://en.wikipedia.org/wiki/Teletext) used this exact character set to draw its graphics!
 
 The fact that the BBC Micro supported 2×3 block graphics was not a coincidence either: it used an actual [Teletext microchip](https://en.wikipedia.org/wiki/Mullard_SAA5050) made for TVs to render its text.
 
@@ -74,11 +74,11 @@ Before we move on to the big cheese, let's hop back to the Commodore PET.
 
 The Commodore PET offered more than just 2×2 blocks. It featured shading characters, box-drawing symbols, all sorts of lines, triangles and more—enabling incredibly detailed art despite being only text-based.
 
-This unique and rich character set became known as [PETSCII](https://en.wikipedia.org/wiki/PETSCII) [3] and was reused in later Commodore computers, including the Commodore 64.
+This unique and rich character set became known as [PETSCII](https://en.wikipedia.org/wiki/PETSCII) and was reused in later Commodore computers, including the Commodore 64.
 
 <img src="/articles/images/unicode/renders/figure_06_petscii.png" alt="Figure 6: The unshifted and shifted PETSCII character sets, rendered using the C64 Pro Mono font." width="800" />
 
-The PETSCII art community continues to thrive, with online editors and regularly updated galleries. [*Check it out*](https://tomseditor.com/gallery/browse?platform=commodore&format=petscii&sort=score) [4]!
+The PETSCII art community continues to thrive, with online editors and regularly updated galleries. [*Check it out*](https://tomseditor.com/gallery/browse?platform=commodore&format=petscii&sort=score)!
 
 ## 2×4 Block Graphics
 
@@ -128,7 +128,7 @@ However, they were highly impractical. The dots are too small, and the gaps betw
 
 But then suddenly, out of nowhere, came in 2024 the "Symbols for Legacy Computing Supplement" block, officially adding native 2×4 block characters.
 
-It is kind of a miracle that these 2×4 blocks were accepted into Unicode at all. In the [initial proposal in 2021](https://unicode.org/L2/L2021/21235-terminals-supplement.pdf) [6] for adding more legacy computer graphic characters, the inclusion of the "block octant graphics" from the Kaypro computers was evaluated to be of only "medium" importance, ranking 5 out of 7 for priority.
+It is kind of a miracle that these 2×4 blocks were accepted into Unicode at all. In the [initial proposal in 2021](https://unicode.org/L2/L2021/21235-terminals-supplement.pdf) for adding more legacy computer graphic characters, the inclusion of the "block octant graphics" from the Kaypro computers was evaluated to be of only "medium" importance, ranking 5 out of 7 for priority.
 
 > **Note**: Since these latest block characters were just added last year, few fonts support them. The examples in this article used *Iosevka*, an open-source customizable font. *Fairfax HD* and *Cascadia Code* also support them.
 
@@ -140,7 +140,7 @@ Enjoy this handmade *wimmelbild*, and thanks for reading.
 
 ## Bonus: Free Game Included!
 
-Remember in the '80s, when some computer magazines would come bundled with a *totally free* game? The catch: you had to type out [pages](https://arstechnica.com/staff/2018/11/first-encounter) [7] of highly compressed, heavily obfuscated and code-golfed BASIC source code (or even raw binary).
+Remember in the '80s, when some computer magazines would come bundled with a *totally free* game? The catch: you had to type out [pages](https://arstechnica.com/staff/2018/11/first-encounter) of highly compressed, heavily obfuscated and code-golfed BASIC source code (or even raw binary).
 
 It's time to bring this tradition back.
 
@@ -177,18 +177,6 @@ Type out the code in a file named `blockify.java`, then run it with: `java --ena
 
 Try out for example: `java --enable-preview blockify.java https://tenchi.team2xh.net/ttt/images/tram_station.png`.
 
-If you like this kind of thing, check out [`ttt`](https://tenchi.team2xh.net/ttt) [8, 9], a fully fledged block character rendering tool made by yours truly.
+If you like this kind of thing, check out [`ttt`](https://tenchi.team2xh.net/ttt) ([source](https://github.com/Tenchi2xh/ttt)), a fully fledged block character rendering tool made by yours truly.
 
 Good luck!
-
-## References
-
-1. https://en.wikipedia.org/wiki/Semigraphics
-2. https://en.wikipedia.org/wiki/Teletext
-3. https://en.wikipedia.org/wiki/PETSCII
-4. https://tomseditor.com/gallery/browse?platform=commodore&format=petscii&sort=score
-5. https://saydzi.artstation.com/projects/vDlDqv
-6. https://unicode.org/L2/L2021/21235-terminals-supplement.pdf
-7. https://arstechnica.com/staff/2018/11/first-encounter
-8. https://tenchi.team2xh.net/ttt
-9. https://github.com/Tenchi2xh/ttt
