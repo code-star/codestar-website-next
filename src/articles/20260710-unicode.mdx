@@ -4,15 +4,13 @@ author: Hamza Haiken
 publishedAt: 2026-07-10
 ---
 
-# Unicode: The Bridge Between Retrocomputing and Modern Digital Art
+> *This article was first published in NLJUG Magazine*
 
 Let's take a break from the serious stuff and explore something surprising about a technology we use daily without much thought: **Unicode**. While it serves as the foundation for encoding text in our favorite programming languages, it's much more than just an encoding system.
 
 For example, Unicode helps preserve many ancient scripts like **Cuneiform**, **Egyptian Hieroglyphs**, and even **Linear A**—a script we don't even know how to *read* yet! But thanks to Unicode, we can still *type* in *Linear A*:
 
-<img src="/articles/images/unicode/renders/figure_01_ancient_languages.png" alt="" width="800" />
-
-<center><em>Figure 1: Examples of Cuneiform, Egyptian Hieroglyphs and Linear A</em></center><br />
+<img src="/articles/images/unicode/renders/figure_01_ancient_languages.png" alt="Figure 1: Examples of Cuneiform, Egyptian Hieroglyphs and Linear A" width="800" />
 
 Unicode also plays a crucial role in safeguarding contemporary endangered scripts. In a sense, it is a standardized way of preserving our linguistic history. But did you know that Unicode is also preserving the history of **retrocomputing graphics**?
 
@@ -38,15 +36,11 @@ By the late 1970s, ASCII had been well-established for over a decade, but it onl
 
 The [ZX80](https://en.wikipedia.org/wiki/ZX80) (1980), for example, featured perfectly square text characters and included 7 characters representing blocks of 2×2 pixels. Combined with a space character and color inversion, it was possible to represent all 16 possible 2×2 grid combinations (plus some extra shading):
 
-<img src="/articles/images/unicode/renders/figure_02_zx80_charset.png" alt="" width="800" />
-
-<center><em>Figure 2: ZX80 semigraphics character set.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_02_zx80_charset.png" alt="Figure 2: ZX80 semigraphics character set." width="800" />
 
 Let's meet our running example, a little cassette tape icon, here rendered using the ZX80 character set:
 
-<img src="/articles/images/unicode/renders/figure_03_cassette_2x2.png" alt="" width="800" />
-
-<center><em>Figure 3: Shouldn't this be the save icon, instead of a floppy disk?</em></center><br />
+<img src="/articles/images/unicode/renders/figure_03_cassette_2x2.png" alt="Figure 3: Shouldn't this be the save icon, instead of a floppy disk?" width="800" />
 
 Rendering this 16×12 pixels icon using 2×2 blocks takes a total of 48 characters, spread across 6 lines of text.
 
@@ -58,15 +52,11 @@ While 2×2 blocks work well with square characters, reading normal text in such 
 
 This increased graphical resolution at the cost of using more character slots, giving us this set of all 64 possible 2×3 blocks:
 
-<img src="/articles/images/unicode/renders/figure_04_2x3_blocks.png" alt="" width="800" />
-
-<center><em>Figure 4: Full set of 2×3 block graphics</em></center><br />
+<img src="/articles/images/unicode/renders/figure_04_2x3_blocks.png" alt="Figure 4: Full set of 2×3 block graphics" width="800" />
 
 Here is our cassette darling once again, this time rendered using 2×3 blocks:
 
-<img src="/articles/images/unicode/renders/figure_05_cassette_2x3.png" alt="" width="800" />
-
-<center><em>Figure 5: It looks smaller now, but the font size is identical.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_05_cassette_2x3.png" alt="Figure 5: It looks smaller now, but the font size is identical." width="800" />
 
 The same 16×12 pixels icon using 2×3 blocks takes a total of 32 characters, spread across 4 lines of text, a 50% reduction in characters and lines.
 
@@ -86,9 +76,7 @@ The Commodore PET offered more than just 2×2 blocks. It featured shading charac
 
 This unique and rich character set became known as [PETSCII](https://en.wikipedia.org/wiki/PETSCII) [3] and was reused in later Commodore computers, including the Commodore 64.
 
-<img src="/articles/images/unicode/renders/figure_06_petscii.png" alt="" width="800" />
-
-<center><em>Figure 6: The unshifted and shifted PETSCII character sets, rendered using the C64 Pro Mono font.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_06_petscii.png" alt="Figure 6: The unshifted and shifted PETSCII character sets, rendered using the C64 Pro Mono font." width="800" />
 
 The PETSCII art community continues to thrive, with online editors and regularly updated galleries. [*Check it out*](https://tomseditor.com/gallery/browse?platform=commodore&format=petscii&sort=score) [4]!
 
@@ -96,9 +84,7 @@ The PETSCII art community continues to thrive, with online editors and regularly
 
 So, how do we level up from there? You guessed it, with a 256 character set of 2×4 blocks:
 
-<img src="/articles/images/unicode/renders/figure_07_2x4_blocks.png" alt="" width="800" />
-
-<center><em>Figure 7: Now we're cooking.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_07_2x4_blocks.png" alt="Figure 7: Now we're cooking." width="800" />
 
 Very few computers supported 2×4 block graphics—after all, who wants to fill their entire character set exclusively with drawing characters? In fact, only one company, [Kaypro](https://en.wikipedia.org/wiki/Kaypro), ever made computers that used them, in their Kaypro II, IV and 10 (1982-1983).
 
@@ -106,15 +92,11 @@ Although only half of the blocks were included (since the other half could be ge
 
 Here is our ever tinier tape, this time only using 3 lines of text, giving us much more resolution at the cost of character set space. Compared to using 2×2 blocks, that's *four times* the resolution, and we only need half the lines of text to display the same image:
 
-<img src="/articles/images/unicode/renders/figure_08_cassette_2x4.png" alt="" width="800" />
-
-<center><em>Figure 8: Only 24 characters across 3 lines of text, half of our first example.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_08_cassette_2x4.png" alt="Figure 8: Only 24 characters across 3 lines of text, half of our first example." width="800" />
 
 And here is what's possible to render on a standard 80-column screen:
 
-<img src="/articles/images/unicode/renders/figure_09_tram_stop.png" alt="" width="800" />
-
-<center><em>Figure 9: <a href="https://saydzi.artstation.com/projects/vDlDqv">"Tram stop" by Fiodar "Saydzi" Kuleunich</a>.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_09_tram_stop.png" alt="Figure 9: 'Tram stop' by Fiodar 'Saydzi' Kuleunich. https://saydzi.artstation.com/projects/vDlDqv" width="800" />
 
 ## Modern Day
 
@@ -142,9 +124,7 @@ For a long time, the best resolution achievable in text was using *braille*, sin
 
 However, they were highly impractical. The dots are too small, and the gaps between the lines are too wide, making it hard to visually parse:
 
-<img src="/articles/images/unicode/renders/figure_10_cassette_braille.png" alt="" width="800" />
-
-<center><em>Figure 10: Not really very readable, but the best we could do until 2024.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_10_cassette_braille.png" alt="Figure 10: Not really very readable, but the best we could do until 2024." width="800" />
 
 But then suddenly, out of nowhere, came in 2024 the "Symbols for Legacy Computing Supplement" block, officially adding native 2×4 block characters.
 
@@ -156,9 +136,7 @@ But thanks to that proposal, we can now have a lot of fun in our modern terminal
 
 Enjoy this handmade *wimmelbild*, and thanks for reading.
 
-<img src="/articles/images/unicode/renders/figure_11_legacy_computing_showcase.png" alt="" width="800" />
-
-<center><em>Figure 11: Six lines of plain text.</em></center><br />
+<img src="/articles/images/unicode/renders/figure_11_legacy_computing_showcase.png" alt="Figure 11: Six lines of plain text." width="800" />
 
 ## Bonus: Free Game Included!
 
